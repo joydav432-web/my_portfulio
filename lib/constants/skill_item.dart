@@ -51,7 +51,7 @@ const List<Map> skillItem = [
 
   {
 
-    "img": "assets/images/c_program.png",
+    "img": "assets/images/c_program.webp",
     "title": "C",
   },
 
