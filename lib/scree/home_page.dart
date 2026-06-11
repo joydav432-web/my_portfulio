@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:my_portfulio/constants/colors.dart';
-import 'package:my_portfulio/constants/skill_item.dart';
 import 'package:my_portfulio/widgets/drawer_mobile.dart';
 import 'package:my_portfulio/widgets/header_mobile.dart';
 import 'package:my_portfulio/widgets/partial_data.dart';
