@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfulio/style/style.dart';
+import 'package:my_portfulio/widgets/responsive.dart';
 import 'package:my_portfulio/widgets/side_logo.dart';
 
 import '../constants/colors.dart';
 import '../constants/nav_item.dart';
+
 class HeaderDesktop extends StatefulWidget {
   const HeaderDesktop({super.key});
 
@@ -14,38 +16,75 @@ class HeaderDesktop extends StatefulWidget {
 class _HeaderDesktopState extends State<HeaderDesktop> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      width: double.maxFinite,
-      margin: EdgeInsets.symmetric(horizontal: 10.00,vertical: 20.00),
-      decoration:khHeaderDecoration,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
 
-      child: Row(
-        children: [
+        final navFontSize = responsiveSize(
+          width,
+          min: 13,
+          max: 16,
+          minWidth: 600,
+          maxWidth: 1100,
+        );
+        final navGap = responsiveSize(
+          width,
+          min: 6,
+          max: 14,
+          minWidth: 600,
+          maxWidth: 1100,
+        );
 
-          SideLogo(
+        return Container(
+          height: 60,
+          width: double.maxFinite,
+          margin: const EdgeInsets.symmetric(horizontal: 10.00, vertical: 20.00),
+          decoration: khHeaderDecoration,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SideLogo(
+                onTap: () {},
+              ),
 
-            onTap: (){},
-          ),
+              const Spacer(),
 
-          Spacer(),
-
-          for (int i =0; i<navTiles.length; i++)
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: TextButton(onPressed: (){},
-                child: Text(navTiles[i],
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: CustomColor.whitePrimary
-
+              // ✅ Flexible + horizontal scroll = never hard-overflows
+              // even if the nav items don't fully fit at a given width.
+              Flexible(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (int i = 0; i < navTiles.length; i++)
+                        Padding(
+                          padding: EdgeInsets.only(right: navGap),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () {},
+                            child: Text(
+                              navTiles[i],
+                              style: TextStyle(
+                                fontSize: navFontSize,
+                                fontWeight: FontWeight.w500,
+                                color: CustomColor.whitePrimary,
+                              ),
+                            ),
+                          ),
+                        )
+                    ],
                   ),
-                ),),
-            )
-
-        ],
-      ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

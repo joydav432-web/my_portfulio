@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// ─────────────────────────────────────────────
-//  DATA MODEL
-// ─────────────────────────────────────────────
 class ProjectData {
   final String number;
   final String title;
@@ -21,30 +18,6 @@ class ProjectData {
     required this.githubUrl,
   });
 }
-
-// ─────────────────────────────────────────────
-//  USAGE
-// ─────────────────────────────────────────────
-//
-//  ProjectCard(
-//    project: ProjectData(
-//      number: 'PROJECT 1',
-//      title: 'TRUCKCALC',
-//      description: 'A calculations app that helps truck owners and drivers '
-//          'manage trips, fuel costs, and employee payments with ease.',
-//      techStack: ['Dart', 'Flutter', 'REST API', 'Firebase', 'Responsive UI'],
-//      imagePaths: [
-//        'assets/images/tc1.png',
-//        'assets/images/tc2.png',
-//        'assets/images/tc3.png',
-//      ],
-//      githubUrl: 'https://github.com/yourname/truckcalc',
-//    ),
-//  )
-
-// ─────────────────────────────────────────────
-//  MAIN CARD
-// ─────────────────────────────────────────────
 class ProjectCard extends StatefulWidget {
   final ProjectData project;
 
@@ -110,7 +83,6 @@ class _ProjectCardState extends State<ProjectCard>
     _busy = false;
   }
 
-  // ✅ FIX: GitHub link — Uri.parse + launchUrl with fallback
   Future<void> _launchGithub() async {
     final rawUrl = widget.project.githubUrl.trim();
     final uri = Uri.parse(rawUrl);
@@ -147,9 +119,8 @@ class _ProjectCardState extends State<ProjectCard>
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min, // ✅ FIX: no extra bottom space
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // ── IMAGE SECTION ─────────────────────
               GestureDetector(
                 onTap: _onTap,
                 child: SizedBox(
@@ -180,7 +151,6 @@ class _ProjectCardState extends State<ProjectCard>
                         ),
                       ),
 
-                      // Hint overlay before first tap
                       if (!_showGithub)
                         ClipRRect(
                           borderRadius: const BorderRadius.vertical(
@@ -219,7 +189,6 @@ class _ProjectCardState extends State<ProjectCard>
                             count: images.length, active: _idx),
                       ),
 
-                      // GitHub button — bottom left
                       if (_showGithub)
                         Positioned(
                           bottom: 12,
@@ -265,15 +234,13 @@ class _ProjectCardState extends State<ProjectCard>
                 ),
               ),
 
-              // ── CONTENT SECTION ───────────────────
-              // ✅ FIX: tighter padding — 14px top/bottom instead of 18/22
+
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Project label
                     Row(
                       children: [
                         const Icon(Icons.layers_rounded,
