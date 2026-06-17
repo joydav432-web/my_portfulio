@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:my_portfulio/constants/colors.dart';
+import 'package:my_portfulio/widgets/contact_section.dart';
 import 'package:my_portfulio/widgets/customtext_formfield.dart';
 import 'package:my_portfulio/widgets/drawer_mobile.dart';
 import 'package:my_portfulio/widgets/header_mobile.dart';
@@ -117,65 +118,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
 
+                SizedBox(height: 10,),
 
-              Container(
-                padding: EdgeInsets.fromLTRB(25, 20, 25, 60),
-                color: CustomColor.bgLight1,
-                child: Column(
-                  children: [
-                    Text("Get in Touch",style: TextStyle(
-
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: CustomColor.whitePrimary
-                    ),),
+              ContactSection(),
 
 
-                    SizedBox(height: 50),
-                    
-                    Row(
-                      children: [
-                        Flexible(
-                          child: CustomTextFiled(
-                            hintText: 'Your name',
 
-                          )
-                        ),
-
-                        SizedBox(width: 15,),
-
-                        Flexible(child: CustomTextFiled(
-                          hintText: 'Email',
-                        ))
-                      ],
-                    ),
-
-                    SizedBox(height: 15,),
-
-                    CustomTextFiled(
-                      hintText: "Your message",
-                      maxline: 10,
-                    ),
-
-                    SizedBox(height: 30,),
-
-                    SizedBox(
-                      width: double.maxFinite,
-                      child: ElevatedButton(onPressed: (){},
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-
-                            )
-                          ),
-                          child: Text("Get on Touch")),
-                    )
-
-
-                  ],
-                ),
-
-              ),
 
               //footer
               Container(
