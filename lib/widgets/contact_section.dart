@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:my_portfulio/constants/links.dart';
+import 'dart:js'as js;
 
 import '../constants/colors.dart';
 import 'customtext_formfield.dart';
@@ -90,14 +92,24 @@ class ContactSection extends StatelessWidget {
             spacing: 12,runSpacing: 12,runAlignment: WrapAlignment.center,
             children: [
               InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    js.context.callMethod('open',[
+                      AccountLinks.github
+
+                    ]);
+                  },
                   child: Image.asset("assets/images/github.png",
                     width: 28,
                   )),
 
 
               InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    js.context.callMethod('open',[
+                      AccountLinks.linkedin
+
+                    ]);
+                  },
                   child: Image.asset("assets/images/linkedin.png",
                     width: 28,
                   ))

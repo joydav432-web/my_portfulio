@@ -4,7 +4,9 @@ import '../constants/colors.dart';
 import '../constants/nav_item.dart';
 
 class DrawerMobile extends StatelessWidget {
-  const DrawerMobile({super.key});
+  const DrawerMobile({super.key, required this.onNavItemTap});
+
+  final Function (int) onNavItemTap;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class DrawerMobile extends StatelessWidget {
 
 
               onTap: (){
+                onNavItemTap(i);
 
               },
 

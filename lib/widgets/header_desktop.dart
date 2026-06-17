@@ -7,7 +7,11 @@ import '../constants/colors.dart';
 import '../constants/nav_item.dart';
 
 class HeaderDesktop extends StatefulWidget {
-  const HeaderDesktop({super.key});
+  const HeaderDesktop({
+    super.key,
+    required this.onMenuTap});
+
+  final Function(int)onMenuTap;
 
   @override
   State<HeaderDesktop> createState() => _HeaderDesktopState();
@@ -41,7 +45,7 @@ class _HeaderDesktopState extends State<HeaderDesktop> {
           margin: const EdgeInsets.symmetric(horizontal: 10.00, vertical: 20.00),
           decoration: khHeaderDecoration,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SideLogo(
                 onTap: () {},
@@ -49,8 +53,6 @@ class _HeaderDesktopState extends State<HeaderDesktop> {
 
               const Spacer(),
 
-              // ✅ Flexible + horizontal scroll = never hard-overflows
-              // even if the nav items don't fully fit at a given width.
               Flexible(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -66,7 +68,9 @@ class _HeaderDesktopState extends State<HeaderDesktop> {
                               minimumSize: Size.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              widget.onMenuTap(i);
+                            },
                             child: Text(
                               navTiles[i],
                               style: TextStyle(
