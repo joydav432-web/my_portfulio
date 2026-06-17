@@ -35,13 +35,11 @@ class _PartialDataState extends State<PartialData> {
           height: isDesktop ? screenSize.height / 1.2 : null,
           constraints: const BoxConstraints(minHeight: 350),
           child: isDesktop
-          // ================= DESKTOP =================
               ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // TEXT — Expanded so it shrinks/grows with the row instead
-              // of forcing the image off-screen.
+
               Expanded(
                 flex: 3,
                 child: Column(
@@ -63,12 +61,13 @@ class _PartialDataState extends State<PartialData> {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: CustomColor.yellowSecondary,
+                          backgroundColor: Color(0xffF62440),
                         ),
                         child: Text(
-                          "Get in Touch",
+                          "Resume",
                           style: TextStyle(
                             color: CustomColor.whitePrimary,
+                            fontWeight: FontWeight.w600
                           ),
                         ),
                       ),
@@ -156,12 +155,13 @@ class _PartialDataState extends State<PartialData> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColor.yellowSecondary,
+                      backgroundColor: Color(0xffF62440),
                     ),
                     child: Text(
-                      "Get in Touch",
+                      "Resume",
                       style: TextStyle(
-                        color: CustomColor.whitePrimary,
+                        color: CustomColor.whiteSecondary,
+                        fontWeight: FontWeight.w600
                       ),
                     ),
                   ),

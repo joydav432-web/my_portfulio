@@ -1,71 +1,97 @@
-import 'dart:math';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-// ── Animated Particle Background Widget ──────────────────────
-class ParticleBackground extends StatefulWidget {
-  final Widget? child;
-  const ParticleBackground({super.key, this.child});
+// ─── PulseRing stub (home_page.dart hide করে, এটা puls_ring.dart এ আসল আছে)
+class PulseRing extends StatelessWidget {
+  final double size;
+  final Color color;
+  const PulseRing({super.key, this.size = 100, this.color = Colors.white});
+
   @override
-  State<ParticleBackground> createState() => _ParticleBackgroundState();
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }
 
-class _Particle {
-  double x, y, vx, vy, r, opacity;
-  _Particle(double w, double h)
-      : x = Random().nextDouble() * w,
-        y = Random().nextDouble() * h,
-        vx = (Random().nextDouble() - 0.5) * 0.8,
-        vy = (Random().nextDouble() - 0.5) * 0.8,
-        r = Random().nextDouble() * 1.8 + 0.5,
-        opacity = Random().nextDouble() * 0.5 + 0.1;
+// ─── Ambient glow orb ────────────────────────────────────────────────────────
+class _GlowOrb extends StatelessWidget {
+  final double size;
+  final Color color;
+  const _GlowOrb({required this.size, required this.color});
 
-  void update(double w, double h) {
-    x += vx;
-    y += vy;
-    if (x < 0 || x > w) vx *= -1;
-    if (y < 0 || y > h) vy *= -1;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          colors: [
+            color.withOpacity(0.20),
+            color.withOpacity(0.06),
+            color.withOpacity(0.0),
+          ],
+          stops: const [0.0, 0.5, 1.0],
+        ),
+      ),
+    );
   }
 }
 
+// ─── Dot-grid painter ────────────────────────────────────────────────────────
+class _GridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Grid lines
+    final linePaint = Paint()
+      ..color = const Color(0xFF7878FF).withOpacity(0.04)
+      ..strokeWidth = 0.5;
+    const step = 44.0;
+    for (double x = 0; x <= size.width; x += step) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), linePaint);
+    }
+    for (double y = 0; y <= size.height; y += step) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), linePaint);
+    }
+    // Intersection dots
+    final dotPaint = Paint()
+      ..color = const Color(0xFF9090FF).withOpacity(0.10);
+    for (double x = 0; x <= size.width; x += step) {
+      for (double y = 0; y <= size.height; y += step) {
+        canvas.drawCircle(Offset(x, y), 1.0, dotPaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_) => false;
+}
+
+// ─── Particle data ────────────────────────────────────────────────────────────
+class _Particle {
+  double x, y, vx, vy, radius, opacity;
+  _Particle({
+    required this.x,
+    required this.y,
+    required this.vx,
+    required this.vy,
+    required this.radius,
+    required this.opacity,
+  });
+}
+
+// ─── Particle painter ─────────────────────────────────────────────────────────
 class _ParticlePainter extends CustomPainter {
   final List<_Particle> particles;
   _ParticlePainter(this.particles);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final grad = RadialGradient(colors: [
-      const Color(0xFF5038B0).withOpacity(0.18),
-      const Color(0xFF1E2860).withOpacity(0.10),
-      Colors.transparent,
-    ]).createShader(Rect.fromCircle(
-        center: Offset(size.width * 0.35, size.height * 0.45),
-        radius: size.width * 0.6));
-    canvas.drawRect(Offset.zero & size, Paint()..shader = grad);
-
     for (final p in particles) {
       canvas.drawCircle(
         Offset(p.x, p.y),
-        p.r,
-        Paint()..color = const Color(0xFFC8C0FF).withOpacity(p.opacity),
+        p.radius,
+        Paint()..color = const Color(0xFFBBBBCC).withOpacity(p.opacity),
       );
-    }
-
-    final linePaint = Paint()..strokeWidth = 0.5;
-    for (int i = 0; i < particles.length; i++) {
-      for (int j = i + 1; j < particles.length; j++) {
-        final dx = particles[i].x - particles[j].x;
-        final dy = particles[i].y - particles[j].y;
-        final d = sqrt(dx * dx + dy * dy);
-        if (d < 100) {
-          linePaint.color =
-              const Color(0xFFB4AAFF).withOpacity(0.12 * (1 - d / 100));
-          canvas.drawLine(
-            Offset(particles[i].x, particles[i].y),
-            Offset(particles[j].x, particles[j].y),
-            linePaint,
-          );
-        }
-      }
     }
   }
 
@@ -73,312 +99,148 @@ class _ParticlePainter extends CustomPainter {
   bool shouldRepaint(_ParticlePainter old) => true;
 }
 
+// ─── ParticleBackground ───────────────────────────────────────────────────────
+// Column/SingleChildScrollView এর ভেতরে ব্যবহারের জন্য safe।
+// overflow বা unbounded height এর কোনো সমস্যা নেই।
+class ParticleBackground extends StatefulWidget {
+  final Widget child;
+  const ParticleBackground({super.key, required this.child});
+
+  @override
+  State<ParticleBackground> createState() => _ParticleBackgroundState();
+}
+
 class _ParticleBackgroundState extends State<ParticleBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
-  List<_Particle> _particles = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl =
-    AnimationController(vsync: this, duration: const Duration(seconds: 1))
-      ..repeat();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_particles.isEmpty && mounted) {
-      final s = MediaQuery.of(context).size;
-      _particles = List.generate(60, (_) => _Particle(s.width, s.height));
-    }
-  }
-
-  @override
-  void dispose() {
-    _ctrl.stop();
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _ctrl,
-      builder: (_, __) {
-        if (!mounted) return widget.child ?? const SizedBox();
-
-        final size = MediaQuery.of(context).size;
-        for (final p in _particles) {
-          p.update(size.width, size.height);
-        }
-        return CustomPaint(
-          painter: _ParticlePainter(_particles),
-          child: widget.child,
-        );
-      },
-    );
-  }
-}
-
-// ── Hero Section ─────────────────────────────────────────────
-class HeroSection extends StatelessWidget {
-  const HeroSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 600;
-        return isMobile ? _MobileLayout() : _DesktopLayout();
-      },
-    );
-  }
-}
-
-// ── Desktop Layout ────────────────────────────────────────────
-class _DesktopLayout extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final screenWidth = screenSize.width;
-
-    return Container(
-      width: double.infinity,
-      height: screenSize.height / 1.2,
-      constraints: const BoxConstraints(minHeight: 350),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1D2E),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: ParticleBackground(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            // Left: Text
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Hii,\nI'm JOY DEB\nA Flutter Developer",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 15),
-                SizedBox(
-                  width: 200,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFD700),
-                      foregroundColor: const Color(0xFF1A1D2E),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: const Text("Get in Touch",
-                        style: TextStyle(fontWeight: FontWeight.w600)),
-                  ),
-                ),
-              ],
-            ),
-
-            // Right: Photo with rings
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                PulseRing(
-                  size: screenWidth / 3 + 50,
-                  color: const Color(0xFFFFD700).withOpacity(0.12),
-                ),
-                PulseRing(
-                  size: screenWidth / 3 + 20,
-                  color: const Color(0xFFFFD700).withOpacity(0.20),
-                ),
-                Container(
-                  width: screenWidth / 3,
-                  height: screenWidth / 3 * 1.25,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                        color: const Color(0xFFFFD700).withOpacity(0.35),
-                        width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFFD700).withOpacity(0.12),
-                        blurRadius: 40,
-                        spreadRadius: 4,
-                      )
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child:
-                    Image.asset('assets/images/my_2.jpg', fit: BoxFit.cover),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── Mobile Layout ─────────────────────────────────────────────
-class _MobileLayout extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final w = constraints.maxWidth;
-        final imageSize = w * 0.50;
-
-        return Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1D2E),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: ClipRect(
-              child: ParticleBackground(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Photo
-                      SizedBox(
-                        width: w,
-                        height: imageSize * 1.2 + 50,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            PulseRing(
-                              size: imageSize + 30,
-                              color: const Color(0xFFFFD700).withOpacity(0.12),
-                            ),
-                            PulseRing(
-                              size: imageSize + 12,
-                              color: const Color(0xFFFFD700).withOpacity(0.20),
-                            ),
-                            Container(
-                              width: imageSize,
-                              height: imageSize * 1.2,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                    color: const Color(0xFFFFD700).withOpacity(0.35),
-                                    width: 2),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFFFFD700).withOpacity(0.12),
-                                    blurRadius: 30,
-                                    spreadRadius: 4,
-                                  )
-                                ],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset('assets/images/my_2.jpg',
-                                    fit: BoxFit.cover),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      // Text
-                      Text(
-                        "Hii,\nI'm JOY DEB\nA Flutter Developer",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: w < 400 ? 22 : 26,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                          height: 1.5,
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      SizedBox(
-                        width: 200,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFFD700),
-                            foregroundColor: const Color(0xFF1A1D2E),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: const Text("Get in Touch",
-                              style: TextStyle(fontWeight: FontWeight.w600)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-            );
-        },
-    );
-  }
-}
-
-// ── Pulsing decorative ring ───────────────────────────────────
-class PulseRing extends StatefulWidget {
-  final double size;
-  final Color color;
-  const PulseRing({super.key, required this.size, required this.color});
-  @override
-  State<PulseRing> createState() => _PulseRingState();
-}
-
-class _PulseRingState extends State<PulseRing>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl;
-  late Animation<double> _anim;
+  final List<_Particle> _particles = [];
+  final math.Random _rnd = math.Random();
+  // Screen width ব্যবহার হবে, height fixed ধরে particle scatter করব
+  double _w = 400;
+  double _h = 600;
 
   @override
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-        vsync: this, duration: const Duration(seconds: 3))
-      ..repeat(reverse: true);
-    _anim = Tween(begin: 0.4, end: 1.0).animate(
-        CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+      vsync: this,
+      duration: const Duration(seconds: 10),
+    )..repeat();
+    _ctrl.addListener(_update);
+  }
+
+  void _initParticles() {
+    _particles.clear();
+    for (int i = 0; i < 42; i++) {
+      _particles.add(_Particle(
+        x: _rnd.nextDouble() * _w,
+        y: _rnd.nextDouble() * _h,
+        vx: (_rnd.nextDouble() - 0.5) * 0.45,
+        vy: (_rnd.nextDouble() - 0.5) * 0.45,
+        radius: _rnd.nextDouble() * 1.5 + 0.4,
+        opacity: _rnd.nextDouble() * 0.30 + 0.07,
+      ));
+    }
+  }
+
+  void _update() {
+    if (!mounted) return;
+    for (final p in _particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = _w;
+      if (p.x > _w) p.x = 0;
+      if (p.y < 0) p.y = _h;
+      if (p.y > _h) p.y = 0;
+    }
+    setState(() {});
   }
 
   @override
   void dispose() {
+    _ctrl.removeListener(_update);
     _ctrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _anim,
-      builder: (_, __) => Container(
-        width: widget.size,
-        height: widget.size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-              color: widget.color.withOpacity(_anim.value), width: 1),
-        ),
+    // MediaQuery থেকে screen size নিচ্ছি — Column এ safe, কোনো unbounded error নেই
+    final screen = MediaQuery.of(context).size;
+    _w = screen.width;
+    // child যা জায়গা নেবে সেটার আনুমানিক height; particle শুধু visible area তে থাকবে
+    _h = screen.height;
+
+    if (_particles.isEmpty) _initParticles();
+
+    // 🔧 FIX: যখন এই widget কোনো Column/SingleChildScrollView-এর ভেতরে বসে,
+    // ওই Column cross-axis-এ loose width constraint পাস করে। সেই অবস্থায়
+    // Stack নিজের non-positioned child (widget.child)-এর intrinsic width
+    // অনুযায়ী shrink করে ফেলে — ফলে mobile / ~600px breakpoint-এ background
+    // দুই পাশে ফাঁকা দেখা যাচ্ছিল। SizedBox(width: double.infinity) child-এর
+    // width যাই হোক, এই widget-কে সবসময় পুরো available width নিতে force করে।
+    return SizedBox(
+      width: double.infinity,
+      child: Stack(
+        // overflow clip করে — Positioned orb গুলো বাইরে গেলেও কোনো error নেই
+        clipBehavior: Clip.hardEdge,
+        children: [
+          // ── পুরো background fill ──
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF0D0D1A),
+                    Color(0xFF0F0F24),
+                    Color(0xFF0A1220),
+                    Color(0xFF0D1A1A),
+                  ],
+                  stops: [0.0, 0.35, 0.7, 1.0],
+                ),
+              ),
+            ),
+          ),
+
+          // ── Grid overlay ──
+          Positioned.fill(
+            child: CustomPaint(painter: _GridPainter()),
+          ),
+
+          // ── Particle layer ──
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _ParticlePainter(_particles),
+            ),
+          ),
+
+          // ── Glow orbs (Positioned, clip করা আছে তাই safe) ──
+          Positioned(
+            top: -100,
+            left: -100,
+            child: _GlowOrb(size: 380, color: const Color(0xFF6355FF)),
+          ),
+          Positioned(
+            bottom: -120,
+            right: -80,
+            child: _GlowOrb(size: 420, color: const Color(0xFF00C8A0)),
+          ),
+          Positioned(
+            top: 160,
+            right: -40,
+            child: _GlowOrb(size: 240, color: const Color(0xFF3A7BFF)),
+          ),
+          Positioned(
+            bottom: 80,
+            left: 60,
+            child: _GlowOrb(size: 180, color: const Color(0xFF8B5FFF)),
+          ),
+
+          // ── Actual content (child) — সবার উপরে ──
+          widget.child,
+        ],
       ),
     );
   }
