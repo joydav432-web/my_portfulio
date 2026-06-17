@@ -31,116 +31,118 @@ class _HomePageState extends State<HomePage> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Scaffold(
-          key: scaffoldKey,
-
-          backgroundColor: const Color(0xFF0D0D1A),
-
-          endDrawer: constraints.maxWidth >= 600
-              ? null
-              : DrawerMobile(
-            onNavItemTap: (int navIndex) {
-              scrollToSection(navIndex);
-              scaffoldKey.currentState?.closeEndDrawer();
-            },
-          ),
-
-
-          body: ParticleBackground(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              controller: scrollController,
-              child: Column(
-                children: [
-                  SizedBox(key: navbarKeys[0]),
-
-                  if (constraints.maxWidth >= 600)
-                    HeaderDesktop(
-                      onMenuTap: (int navIndex) {
-                        scrollToSection(navIndex);
-                      },
-                    )
-                  else
-                    HeaderMobile(
-                      onMenuTap: () {
-                        scaffoldKey.currentState?.openEndDrawer();
-                      },
-                      onLogoTap: () {},
-                    ),
-
-                  const PartialData(),
-
-                  // SKILLS SECTION
-                  Container(
-                    key: navbarKeys[1],
-                    width: screenWidth,
-                    padding: const EdgeInsets.fromLTRB(25, 20, 25, 60),
-
-                    color: Colors.transparent,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "What I Can Do",
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: CustomColor.whitePrimary,
+        return SafeArea(
+          child: Scaffold(
+            key: scaffoldKey,
+          
+            backgroundColor: const Color(0xFF0D0D1A),
+          
+            endDrawer: constraints.maxWidth >= 600
+                ? null
+                : DrawerMobile(
+              onNavItemTap: (int navIndex) {
+                scrollToSection(navIndex);
+                scaffoldKey.currentState?.closeEndDrawer();
+              },
+            ),
+          
+          
+            body: ParticleBackground(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                controller: scrollController,
+                child: Column(
+                  children: [
+                    SizedBox(key: navbarKeys[0]),
+          
+                    if (constraints.maxWidth >= 600)
+                      HeaderDesktop(
+                        onMenuTap: (int navIndex) {
+                          scrollToSection(navIndex);
+                        },
+                      )
+                    else
+                      HeaderMobile(
+                        onMenuTap: () {
+                          scaffoldKey.currentState?.openEndDrawer();
+                        },
+                        onLogoTap: () {},
+                      ),
+          
+                    const PartialData(),
+          
+                    // SKILLS SECTION
+                    Container(
+                      key: navbarKeys[1],
+                      width: screenWidth,
+                      padding: const EdgeInsets.fromLTRB(25, 20, 25, 60),
+          
+                      color: Colors.transparent,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "What I Can Do",
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: CustomColor.whitePrimary,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 50),
-                        if (constraints.maxWidth >= 600)
-                          SkillDesktop()
-                        else
-                          SkillsMobile(),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // PROJECT SECTION
-                  Container(
-                    key: navbarKeys[2],
-                    width: screenWidth,
-                    padding: const EdgeInsets.fromLTRB(25, 20, 25, 60),
-                    color: Colors.transparent,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Work Project",
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: CustomColor.whitePrimary,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        WorkProject(),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // CONTACT SECTION
-                  ContactSection(
-                    key: navbarKeys[3],
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
-                    child: Text(
-                      "Made by JOYDEB with flutter 3.44.1",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: CustomColor.whiteSecondary,
+                          const SizedBox(height: 50),
+                          if (constraints.maxWidth >= 600)
+                            SkillDesktop()
+                          else
+                            SkillsMobile(),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+          
+                    const SizedBox(height: 20),
+          
+                    // PROJECT SECTION
+                    Container(
+                      key: navbarKeys[2],
+                      width: screenWidth,
+                      padding: const EdgeInsets.fromLTRB(25, 20, 25, 60),
+                      color: Colors.transparent,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Work Project",
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: CustomColor.whitePrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          WorkProject(),
+                        ],
+                      ),
+                    ),
+          
+                    const SizedBox(height: 10),
+          
+                    // CONTACT SECTION
+                    ContactSection(
+                      key: navbarKeys[3],
+                    ),
+          
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Text(
+                        "Made by JOYDEB with flutter 3.44.1",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: CustomColor.whiteSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

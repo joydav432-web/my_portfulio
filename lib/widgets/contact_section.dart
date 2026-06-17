@@ -50,7 +50,8 @@ class _ContactSectionState extends State<ContactSection> {
             const SizedBox(height: 50),
 
             ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 700, maxHeight: 100),
+              constraints: const BoxConstraints(maxWidth: 700,
+                  maxHeight: 150),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   if (constraints.maxWidth >= 600) {

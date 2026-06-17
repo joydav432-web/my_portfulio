@@ -28,7 +28,10 @@ class SkillDesktop extends StatelessWidget {
                       vertical: 20.0,
                     ),
                     leading: Image.asset(platformItems[i]["img"]),
-                    title: Text(platformItems[i]["title"]),
+                    title: Text(
+                      platformItems[i]["title"],
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 )
             ],
@@ -67,6 +70,9 @@ class _HoverGlowCard extends StatefulWidget {
 class _HoverGlowCardState extends State<_HoverGlowCard> {
   bool _isHovering = false;
 
+  // Default dark blue background for platform cards
+  static const Color darkBlue = Color(0xFF0D1B3D);
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -77,7 +83,7 @@ class _HoverGlowCardState extends State<_HoverGlowCard> {
         curve: Curves.easeInOut,
         width: 200,
         decoration: BoxDecoration(
-          color: CustomColor.bgLight2,
+          color: darkBlue,
           borderRadius: BorderRadius.circular(5),
           boxShadow: _isHovering
               ? [
@@ -112,7 +118,6 @@ class _HoverGlowCardState extends State<_HoverGlowCard> {
   }
 }
 
-// Hover-glow wrapper for the skill chips
 class _HoverGlowChip extends StatefulWidget {
   final String title;
   final String img;

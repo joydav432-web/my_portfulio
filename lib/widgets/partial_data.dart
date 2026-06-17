@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfulio/widgets/responsive.dart';
+import 'package:my_portfulio/widgets/resume_button.dart';
 
 import '../constants/colors.dart';
 import '../constants/puls_ring.dart';
@@ -59,7 +60,7 @@ class _PartialDataState extends State<PartialData> {
                     SizedBox(
                       width: 200,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: ()=>openResume(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xffF62440),
                         ),

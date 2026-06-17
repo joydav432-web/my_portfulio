@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-// ─── PulseRing stub (home_page.dart hide করে, এটা puls_ring.dart এ আসল আছে)
 class PulseRing extends StatelessWidget {
   final double size;
   final Color color;
@@ -11,7 +10,6 @@ class PulseRing extends StatelessWidget {
   Widget build(BuildContext context) => const SizedBox.shrink();
 }
 
-// ─── Ambient glow orb ────────────────────────────────────────────────────────
 class _GlowOrb extends StatelessWidget {
   final double size;
   final Color color;
@@ -37,11 +35,9 @@ class _GlowOrb extends StatelessWidget {
   }
 }
 
-// ─── Dot-grid painter ────────────────────────────────────────────────────────
 class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    // Grid lines
     final linePaint = Paint()
       ..color = const Color(0xFF7878FF).withOpacity(0.04)
       ..strokeWidth = 0.5;
@@ -52,7 +48,6 @@ class _GridPainter extends CustomPainter {
     for (double y = 0; y <= size.height; y += step) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), linePaint);
     }
-    // Intersection dots
     final dotPaint = Paint()
       ..color = const Color(0xFF9090FF).withOpacity(0.10);
     for (double x = 0; x <= size.width; x += step) {
@@ -100,8 +95,6 @@ class _ParticlePainter extends CustomPainter {
 }
 
 // ─── ParticleBackground ───────────────────────────────────────────────────────
-// Column/SingleChildScrollView এর ভেতরে ব্যবহারের জন্য safe।
-// overflow বা unbounded height এর কোনো সমস্যা নেই।
 class ParticleBackground extends StatefulWidget {
   final Widget child;
   const ParticleBackground({super.key, required this.child});
@@ -115,7 +108,6 @@ class _ParticleBackgroundState extends State<ParticleBackground>
   late AnimationController _ctrl;
   final List<_Particle> _particles = [];
   final math.Random _rnd = math.Random();
-  // Screen width ব্যবহার হবে, height fixed ধরে particle scatter করব
   double _w = 400;
   double _h = 600;
 
@@ -126,6 +118,10 @@ class _ParticleBackgroundState extends State<ParticleBackground>
       vsync: this,
       duration: const Duration(seconds: 10),
     )..repeat();
+    // ফিক্স: setState() বাদ দেওয়া হয়েছে। AnimationController নিজেই
+    // প্রতি ফ্রেমে listeners-কে notify করে। AnimatedBuilder (নিচে build()-এ)
+    // শুধুমাত্র particle CustomPaint rebuild করবে — পুরো Stack/widget.child
+    // (Home/Skills/Projects/Contact) আর রিবিল্ড হবে না প্রতি ফ্রেমে।
     _ctrl.addListener(_update);
   }
 
@@ -153,7 +149,7 @@ class _ParticleBackgroundState extends State<ParticleBackground>
       if (p.y < 0) p.y = _h;
       if (p.y > _h) p.y = 0;
     }
-    setState(() {});
+
   }
 
   @override
@@ -165,27 +161,17 @@ class _ParticleBackgroundState extends State<ParticleBackground>
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery থেকে screen size নিচ্ছি — Column এ safe, কোনো unbounded error নেই
     final screen = MediaQuery.of(context).size;
     _w = screen.width;
-    // child যা জায়গা নেবে সেটার আনুমানিক height; particle শুধু visible area তে থাকবে
     _h = screen.height;
 
     if (_particles.isEmpty) _initParticles();
 
-    // 🔧 FIX: যখন এই widget কোনো Column/SingleChildScrollView-এর ভেতরে বসে,
-    // ওই Column cross-axis-এ loose width constraint পাস করে। সেই অবস্থায়
-    // Stack নিজের non-positioned child (widget.child)-এর intrinsic width
-    // অনুযায়ী shrink করে ফেলে — ফলে mobile / ~600px breakpoint-এ background
-    // দুই পাশে ফাঁকা দেখা যাচ্ছিল। SizedBox(width: double.infinity) child-এর
-    // width যাই হোক, এই widget-কে সবসময় পুরো available width নিতে force করে।
     return SizedBox(
       width: double.infinity,
       child: Stack(
-        // overflow clip করে — Positioned orb গুলো বাইরে গেলেও কোনো error নেই
         clipBehavior: Clip.hardEdge,
         children: [
-          // ── পুরো background fill ──
           Positioned.fill(
             child: Container(
               decoration: const BoxDecoration(
@@ -204,19 +190,21 @@ class _ParticleBackgroundState extends State<ParticleBackground>
             ),
           ),
 
-          // ── Grid overlay ──
           Positioned.fill(
             child: CustomPaint(painter: _GridPainter()),
           ),
 
-          // ── Particle layer ──
           Positioned.fill(
-            child: CustomPaint(
-              painter: _ParticlePainter(_particles),
+            child: AnimatedBuilder(
+              animation: _ctrl,
+              builder: (context, _) {
+                return CustomPaint(
+                  painter: _ParticlePainter(_particles),
+                );
+              },
             ),
           ),
 
-          // ── Glow orbs (Positioned, clip করা আছে তাই safe) ──
           Positioned(
             top: -100,
             left: -100,
@@ -238,7 +226,6 @@ class _ParticleBackgroundState extends State<ParticleBackground>
             child: _GlowOrb(size: 180, color: const Color(0xFF8B5FFF)),
           ),
 
-          // ── Actual content (child) — সবার উপরে ──
           widget.child,
         ],
       ),

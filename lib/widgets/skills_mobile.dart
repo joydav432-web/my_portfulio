@@ -71,7 +71,7 @@ class _TapGlowCardState extends State<_TapGlowCard> {
         margin: EdgeInsets.only(bottom: 5.00),
         width: double.maxFinite,
         decoration: BoxDecoration(
-          color: CustomColor.bgLight2,
+          color: const Color(0xFF0D1B3D),
           borderRadius: BorderRadius.circular(5.0),
           boxShadow: _isPressed
               ? [
@@ -157,8 +157,8 @@ class _TapGlowChipState extends State<_TapGlowChip> {
           backgroundColor: _isPressed
               ? Colors.cyanAccent.withOpacity(0.15)
               : null,
-          label: Text(widget.title),       // ← fixed: widget.title
-          avatar: Image.asset(widget.img), // ← fixed: widget.img
+          label: Text(widget.title),
+          avatar: Image.asset(widget.img),
         ),
       ),
     );
