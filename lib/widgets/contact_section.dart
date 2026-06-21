@@ -3,6 +3,7 @@ import 'package:my_portfulio/constants/links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/colors.dart';
 import 'customtext_formfield.dart';
+import 'section_header.dart';
 
 class ContactSection extends StatefulWidget {
   const ContactSection({super.key});
@@ -38,20 +39,13 @@ class _ContactSectionState extends State<ContactSection> {
         key: _formKey,
         child: Column(
           children: [
-            Text(
-              "Get in Touch",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: CustomColor.whitePrimary,
-              ),
-            ),
+            // Animated Header
+            const SectionHeader(title: "Get in Touch"),
 
             const SizedBox(height: 50),
 
             ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 700,
-                  maxHeight: 150),
+              constraints: const BoxConstraints(maxWidth: 700, maxHeight: 150),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   if (constraints.maxWidth >= 600) {
@@ -91,7 +85,6 @@ class _ContactSectionState extends State<ContactSection> {
                       // submit logic
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Message sent!")),
-
                       );
                       nameController.clear();
                       emailController.clear();
@@ -99,21 +92,20 @@ class _ContactSectionState extends State<ContactSection> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffF62440),
+                    backgroundColor: const Color(0xffF62440),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     "Send",
-                    style: TextStyle(color:CustomColor.whiteSecondary,
+                    style: TextStyle(color: CustomColor.whiteSecondary),
                   ),
                 ),
               ),
             ),
-            ),
 
-             SizedBox(height: 15),
+            const SizedBox(height: 15),
 
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 300),
@@ -229,10 +221,8 @@ class _ContactSectionState extends State<ContactSection> {
     );
   }
 
-
   Future<void> openUrl(String url) async {
     final uri = Uri.parse(url);
-
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     }

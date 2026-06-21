@@ -27,16 +27,16 @@ class WorkProject extends StatelessWidget {
         number: "Project 2",
         title: "TRUCKLACK",
         description:
-        "Streamline your transport business with our Truck Management App.",
+        "Management your daily earn and expenses with our expenses Trucker",
         techStack: [
           'Dart',
           'Flutter',
-          'REST API',
+          'SharedPreference',
           'Firebase',
           'Responsive UI'
         ],
-        imagePaths: ['assets/images/project_1.jpeg'],
-        githubUrl: 'https://github.com/joydav432-web/Card-view',
+        imagePaths: ['assets/images/app_2.jpeg'],
+        githubUrl: 'https://github.com/joydav432-web/expense_trucker',
       ),
     ];
 

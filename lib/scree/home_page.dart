@@ -7,6 +7,7 @@ import 'package:my_portfulio/widgets/header_mobile.dart';
 import 'package:my_portfulio/widgets/partial_data.dart';
 import 'package:my_portfulio/widgets/skills_mobile.dart';
 import 'package:my_portfulio/widgets/theme_home.dart' hide PulseRing;
+import 'package:my_portfulio/widgets/section_header.dart';
 
 import '../widgets/header_desktop.dart';
 import '../widgets/skill_desktop.dart';
@@ -32,21 +33,17 @@ class _HomePageState extends State<HomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SafeArea(
-         child : Scaffold(
+          child: Scaffold(
             key: scaffoldKey,
-          
             backgroundColor: const Color(0xFF0D0D1A),
-          
             endDrawer: constraints.maxWidth >= 600
                 ? null
                 : DrawerMobile(
-              onNavItemTap: (int navIndex) {
-                scrollToSection(navIndex);
-                scaffoldKey.currentState?.closeEndDrawer();
-              },
-            ),
-          
-          
+                    onNavItemTap: (int navIndex) {
+                      scrollToSection(navIndex);
+                      scaffoldKey.currentState?.closeEndDrawer();
+                    },
+                  ),
             body: ParticleBackground(
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -54,7 +51,6 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     SizedBox(key: navbarKeys[0]),
-          
                     if (constraints.maxWidth >= 600)
                       HeaderDesktop(
                         onMenuTap: (int navIndex) {
@@ -68,38 +64,29 @@ class _HomePageState extends State<HomePage> {
                         },
                         onLogoTap: () {},
                       ),
-          
                     const PartialData(),
-          
+
                     // SKILLS SECTION
                     Container(
                       key: navbarKeys[1],
                       width: screenWidth,
                       padding: const EdgeInsets.fromLTRB(25, 20, 25, 60),
-          
                       color: Colors.transparent,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "What I Can Do",
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: CustomColor.whitePrimary,
-                            ),
-                          ),
+                          const SectionHeader(title: "What I Can Do"),
                           const SizedBox(height: 50),
                           if (constraints.maxWidth >= 600)
-                            SkillDesktop()
+                            const SkillDesktop()
                           else
-                            SkillsMobile(),
+                            const SkillsMobile(),
                         ],
                       ),
                     ),
-          
+
                     const SizedBox(height: 20),
-          
+
                     // PROJECT SECTION
                     Container(
                       key: navbarKeys[2],
@@ -109,27 +96,20 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "Work Project",
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: CustomColor.whitePrimary,
-                            ),
-                          ),
+                          const SectionHeader(title: "Work Projects"),
                           const SizedBox(height: 20),
-                          WorkProject(),
+                          const WorkProject(),
                         ],
                       ),
                     ),
-          
+
                     const SizedBox(height: 10),
-          
+
                     // CONTACT SECTION
                     ContactSection(
                       key: navbarKeys[3],
                     ),
-          
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24),
                       child: Text(
