@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SafeArea(
-          child: Scaffold(
+         child : Scaffold(
             key: scaffoldKey,
           
             backgroundColor: const Color(0xFF0D0D1A),
