@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 const String resumeUrl =
-    "https://docs.google.com/document/d/16NlgcIdMA5Om3bsxy4sX405_p4pqfhvIuvi7uTLgbOs/edit?usp=sharing";
+    "https://drive.google.com/file/d/1xLAenHOySgEI8OR1VzSakYT_S1jw6Ukk/view?usp=sharing";
 
 Future<void> openResume(BuildContext context) async {
   showDialog(

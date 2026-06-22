@@ -25,7 +25,7 @@ class WorkProject extends StatelessWidget {
       ),
       ProjectData(
         number: "Project 2",
-        title: "TRUCKLACK",
+        title: "Expenses Trucker",
         description:
         "Management your daily earn and expenses with our expenses Trucker",
         techStack: [
@@ -35,7 +35,7 @@ class WorkProject extends StatelessWidget {
           'Firebase',
           'Responsive UI'
         ],
-        imagePaths: ['assets/images/app_2.jpeg'],
+        imagePaths: ['assets/images/project_2.jpeg'],
         githubUrl: 'https://github.com/joydav432-web/expense_trucker',
       ),
     ];
