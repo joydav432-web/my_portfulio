@@ -12,7 +12,13 @@ class WorkProject extends StatelessWidget {
         number: "Project 1",
         title: "TRUCKLAC",
         description:
-        "Streamline your transport business with our Truck Management App.",
+        "Trucklac is a business-focused vehicle finance management "
+            "solution built for taxi, car, and transport operators. "
+            "The application enables users to monitor fuel costs, maintenance expenses, "
+            "daily earnings, and profitability through detailed tracking tools. "
+            "It also offers secure account authentication, PDF report generation, "
+            "and flexible history management features for efficient record keeping "
+            "and operational analysis.",
         techStack: [
           'Dart',
           'Flutter',
@@ -20,14 +26,23 @@ class WorkProject extends StatelessWidget {
           'Firebase',
           'Responsive UI'
         ],
-        imagePaths: ['assets/images/project_1.jpeg'],
+        imagePaths: ['assets/images/project_1.jpeg',
+          'assets/images/trucklac_91.png',
+          'assets/images/trucklac_92.png'
+
+        ],
         githubUrl: 'https://github.com/joydav432-web/Card-view',
       ),
       ProjectData(
         number: "Project 2",
         title: "Expenses Trucker",
         description:
-        "Management your daily earn and expenses with our expenses Trucker",
+        "Expense Tracker App is a personal finance management application "
+            "that helps users record and organize their daily income and expenses. "
+            "It provides real-time calculations of total earnings, spending,"
+            " and available balance to simplify budget planning. With a clean themed "
+            "interface and persistent data storage, users can easily analyze their"
+            " financial activities and maintain better control over their money."        ,
         techStack: [
           'Dart',
           'Flutter',
@@ -35,7 +50,10 @@ class WorkProject extends StatelessWidget {
           'Firebase',
           'Responsive UI'
         ],
-        imagePaths: ['assets/images/project_2.jpeg'],
+        imagePaths: ['assets/images/project_2.jpeg',
+        'assets/images/trucker_1.png',
+
+        ],
         githubUrl: 'https://github.com/joydav432-web/expense_trucker',
       ),
     ];

@@ -104,11 +104,10 @@ class _ProjectCardState extends State<ProjectCard>
     final p = widget.project;
     final images = p.imagePaths;
 
-    // ✅ FIX: Responsive — fills parent width, max 400
     return LayoutBuilder(
       builder: (context, constraints) {
         final cardWidth = constraints.maxWidth.clamp(0.0, 400.0);
-        final imgHeight = cardWidth * 0.575; // ~230 at 400px
+        final imgHeight = cardWidth * 0.85; // ~230 at 400px
 
         return Container(
           width: cardWidth,
@@ -142,11 +141,11 @@ class _ProjectCardState extends State<ProjectCard>
                             duration: const Duration(milliseconds: 180),
                             curve: Curves.easeOut,
                             child: Image.asset(
-                              images[_idx],
-                              fit: BoxFit.cover,
-                              width: double.infinity,
+                                    images[_idx],
+                                    fit: BoxFit.cover,
                               height: double.infinity,
-                            ),
+                              width: double.infinity,
+                            )
                           ),
                         ),
                       ),
