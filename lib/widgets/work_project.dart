@@ -8,8 +8,37 @@ class WorkProject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final projects = [
+
       ProjectData(
         number: "Project 1",
+        title: "Photopia",
+        description:
+        "Photopia is a smart photography service platform that connects clients "
+            "with professional photographers for various events and occasions. "
+            "It allows users to create an account, browse photographer profiles, "
+            "and hire the right professional for weddings, birthdays, corporate "
+            "events, and personal photoshoots. Individuals can also register as "
+            "photographers, showcase their portfolios, and receive booking requests "
+            "from potential clients. ",
+        techStack: [
+          'Dart',
+          'Flutter',
+          'REST API',
+          'Firebase',
+          'Responsive UI'
+        ],
+        imagePaths: ['assets/images/onbording_1.png',
+          'assets/images/photopia_2.png',
+          'assets/images/photopia_3.png',
+          'assets/images/photopia_4.png',
+          'assets/images/photopia_5.png'
+
+        ],
+        githubUrl: 'https://github.com/joydav432-web/Card-view',
+      ),
+
+      ProjectData(
+        number: "Project 2",
         title: "TRUCKLAC",
         description:
         "Trucklac is a business-focused vehicle finance management "
@@ -34,7 +63,7 @@ class WorkProject extends StatelessWidget {
         githubUrl: 'https://github.com/joydav432-web/Card-view',
       ),
       ProjectData(
-        number: "Project 2",
+        number: "Project 3",
         title: "Expenses Trucker",
         description:
         "Expense Tracker App is a personal finance management application "

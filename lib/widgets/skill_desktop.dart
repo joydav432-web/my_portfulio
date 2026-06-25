@@ -16,17 +16,26 @@ class SkillDesktop extends StatelessWidget {
             maxWidth: 450,
           ),
           child: Wrap(
-            spacing: 5.0,
-            runSpacing: 5.0,
+            spacing: 20.0,
+            runSpacing: 20.0,
             children: [
               for (int i = 0; i < platformItems.length; i++)
-                _HoverGlowCard(
+                Container(
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0D1B3D),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.cyanAccent,
+                      width: 3.0,
+                    ),
+                  ),
                   child: ListTile(
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 20.0,
-                      vertical: 20.0,
+                      vertical: 10.0,
                     ),
-                    leading: Image.asset(platformItems[i]["img"]),
+                    leading: Image.asset(platformItems[i]["img"], width: 26),
                     title: Text(
                       platformItems[i]["title"],
                       style: TextStyle(color: Colors.white),
@@ -44,132 +53,21 @@ class SkillDesktop extends StatelessWidget {
               runSpacing: 10.0,
               children: [
                 for (int i = 0; i < skillItem.length; i++)
-                  _HoverGlowChip(
-                    title: skillItem[i]["title"],
-                    img: skillItem[i]["img"],
+                  Chip(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 12.0,
+                    ),
+                    backgroundColor: const Color(0xFF0D1B3D),
+                    label: Text(skillItem[i]["title"]),
+                    avatar: Image.asset(skillItem[i]["img"]),
+                    side: BorderSide(color: Colors.white24),
                   )
               ],
             ),
           ),
         )
       ],
-    );
-  }
-}
-
-// Hover-glow wrapper for the platform cards
-class _HoverGlowCard extends StatefulWidget {
-  final Widget child;
-  const _HoverGlowCard({required this.child});
-
-  @override
-  State<_HoverGlowCard> createState() => _HoverGlowCardState();
-}
-
-class _HoverGlowCardState extends State<_HoverGlowCard> {
-  bool _isHovering = false;
-
-  // Default dark blue background for platform cards
-  static const Color darkBlue = Color(0xFF0D1B3D);
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovering = true),
-      onExit: (_) => setState(() => _isHovering = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        width: 200,
-        decoration: BoxDecoration(
-          color: darkBlue,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: _isHovering
-              ? [
-            BoxShadow(
-              color: Colors.cyanAccent.withOpacity(0.6),
-              blurRadius: 20,
-              spreadRadius: 2,
-              offset: const Offset(0, 0),
-            ),
-            BoxShadow(
-              color: Colors.purpleAccent.withOpacity(0.4),
-              blurRadius: 30,
-              spreadRadius: 4,
-              offset: const Offset(0, 0),
-            ),
-          ]
-              : [],
-          border: Border.all(
-            color: _isHovering
-                ? Colors.cyanAccent.withOpacity(0.8)
-                : Colors.transparent,
-            width: 1.5,
-          ),
-        ),
-        transform: _isHovering
-            ? (Matrix4.identity()..scale(1.03))
-            : Matrix4.identity(),
-        transformAlignment: Alignment.center,
-        child: widget.child,
-      ),
-    );
-  }
-}
-
-class _HoverGlowChip extends StatefulWidget {
-  final String title;
-  final String img;
-  const _HoverGlowChip({required this.title, required this.img});
-
-  @override
-  State<_HoverGlowChip> createState() => _HoverGlowChipState();
-}
-
-class _HoverGlowChipState extends State<_HoverGlowChip> {
-  bool _isHovering = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovering = true),
-      onExit: (_) => setState(() => _isHovering = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: _isHovering
-              ? [
-            BoxShadow(
-              color: Colors.cyanAccent.withOpacity(0.6),
-              blurRadius: 18,
-              spreadRadius: 2,
-            ),
-            BoxShadow(
-              color: Colors.purpleAccent.withOpacity(0.4),
-              blurRadius: 26,
-              spreadRadius: 3,
-            ),
-          ]
-              : [],
-        ),
-        transform: _isHovering
-            ? (Matrix4.identity()..scale(1.05))
-            : Matrix4.identity(),
-        transformAlignment: Alignment.center,
-        child: Chip(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 12.0,
-          ),
-          backgroundColor: _isHovering
-              ? Colors.cyanAccent.withOpacity(0.15)
-              : null,
-          label: Text(widget.title),
-          avatar: Image.asset(widget.img),
-        ),
-      ),
     );
   }
 }
