@@ -34,7 +34,7 @@ class WorkProject extends StatelessWidget {
           'assets/images/photopia_5.png'
 
         ],
-        githubUrl: 'https://github.com/joydav432-web/Card-view',
+        githubUrl: 'https://github.com/joydav432-web/photopia',
       ),
 
       ProjectData(
