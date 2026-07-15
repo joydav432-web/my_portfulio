@@ -12,7 +12,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Portfulio',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xff0C0C0C)
+      ),
 
       home: HomePage(),
     );

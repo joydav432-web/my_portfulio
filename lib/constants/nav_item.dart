@@ -7,7 +7,7 @@ List <String>navTiles=[
 
 
   "Home",
-  "Skills",
+  "About",
   "Projects",
   "Contact"
 ];

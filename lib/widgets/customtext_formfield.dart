@@ -22,7 +22,6 @@ class CustomTextFiled extends StatelessWidget {
       controller: controller,
       validator: validator,
       style: TextStyle(
-        color: CustomColor.scaffoldBg,
       ),
       decoration: InputDecoration(
         filled: true,

@@ -11,7 +11,6 @@ class DrawerMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: CustomColor.scaffoldBg,
 
       child: ListView(
         children: [
