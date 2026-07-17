@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:my_portfulio/constants/colors.dart';
-import 'package:my_portfulio/widgets/contact_section.dart';
-import 'package:my_portfulio/widgets/drawer_mobile.dart';
-import 'package:my_portfulio/widgets/header_mobile.dart';
-import 'package:my_portfulio/widgets/skills_mobile.dart';
-import 'package:my_portfulio/widgets/section_header.dart';
-import 'package:my_portfulio/presentation/desktop/tehcnical_stack_section.dart';
+import 'package:my_portfulio/feature/home/desktop/new_desktopHome.dart';
+import 'package:my_portfulio/feature/home/desktop/tehcnical_stack_section.dart';
+import 'package:my_portfulio/feature/home/mobile/mobile_home.dart';
+import 'package:my_portfulio/feature/project/widget/project_header.dart';
 
-import '../presentation/desktop/desktop_home.dart';
-import '../presentation/desktop/header_desktop.dart';
-import '../widgets/work_project.dart';
+import '../feature/home/desktop/header_desktop.dart';
+import '../feature/home/mobile/header_mobile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,6 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final scrollController = ScrollController();
   final List<GlobalKey> navbarKeys = List.generate(4, (index) => GlobalKey());
@@ -27,91 +23,57 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery
+        .of(context)
+        .size;
     final screenWidth = screenSize.width;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return SafeArea(
           child: Scaffold(
-            key: scaffoldKey,
-            endDrawer: constraints.maxWidth >= 600
-                ? null
-                : DrawerMobile(
-              onNavItemTap: (int navIndex) {
-                scrollToSection(navIndex);
-                scaffoldKey.currentState?.closeEndDrawer();
-              },
-            ),
+
+
             body: Column(
               children: [
-                // Fixed Header
-                if (constraints.maxWidth >= 600)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 35),
-                    child: HeaderDesktop(
-                      selectedIndex: selectedIndex,
-                      onMenuTap: (int navIndex) {
-                        scrollToSection(navIndex);
-                      },
-                    ),
-                  )
-                else
-                  HeaderMobile(
-                    onMenuTap: () {
-                      scaffoldKey.currentState?.openEndDrawer();
-                    },
-                    onLogoTap: () {},
-                  ),
 
                 // Scrollable Content
                 Expanded(
                   child: SingleChildScrollView(
                     controller: scrollController,
-                    child: Column(
-                      children: [
-                        SizedBox(key: navbarKeys[0]),
-                        const HeroSection(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(28.0),
+                      child: Column(
+                        children: [
 
-                        // SKILLS SECTION
-                       TechnicalStackSection(),
-                        const SizedBox(height: 20),
+                          if (constraints.maxWidth >= 600)
+                            Container(
+                              child: DesktopHome(),
+                            )
 
-                        // PROJECT SECTION
-                        Container(
-                          key: navbarKeys[2],
-                          width: screenWidth,
-                          padding: const EdgeInsets.fromLTRB(25, 20, 25, 60),
-                          color: Colors.transparent,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SectionHeader(title: "Work Projects"),
-                              const SizedBox(height: 20),
-                              const WorkProject(),
-                            ],
+                          else
+                            Container(
+                              child: MobileHero(),
+                            )                      ,
+
+
+                          // SKILLS SECTION
+                          Container(
+                            child: const TechnicalStackSection(),
                           ),
-                        ),
+                          const SizedBox(height: 20),
 
-                        const SizedBox(height: 10),
-
-                        // CONTACT SECTION
-                        ContactSection(
-                          key: navbarKeys[3],
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 24),
-                          child: Text(
-                            "Made by JOYDEB with flutter 3.44.1",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: CustomColor.whiteSecondary,
-                            ),
+                          // PROJECT SECTION
+                          Container(
+                            child: const ProjectHeader(),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 10),
+
+                          // CONTACT SECTION
+
+
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -120,25 +82,6 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       },
-    );
-  }
-
-  void scrollToSection(int navIndex) {
-    if (navIndex < 0 || navIndex >= navbarKeys.length) return;
-
-    setState(() {
-      selectedIndex = navIndex;
-    });
-
-    final key = navbarKeys[navIndex];
-    final context = key.currentContext;
-    if (context == null) return;
-
-    Scrollable.ensureVisible(
-      context,
-      duration: const Duration(milliseconds: 800),
-      curve: Curves.easeInOut,
-      alignment: 0.1,
     );
   }
 }
