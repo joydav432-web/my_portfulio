@@ -10,7 +10,7 @@ class TechnicalStackSection extends StatelessWidget {
       builder: (context, constraints) {
         final width = constraints.maxWidth;
 
-        final horizontalPadding = (width * 0.05).clamp(20.0, 60.0);
+        final horizontalPadding = (width * 0.05).clamp(20.0, 20.0);
 
         final verticalPadding = (width * 0.05).clamp(35.0, 60.0);
 

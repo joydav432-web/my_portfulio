@@ -4,8 +4,6 @@ import 'package:my_portfulio/feature/home/desktop/tehcnical_stack_section.dart';
 import 'package:my_portfulio/feature/home/mobile/mobile_home.dart';
 import 'package:my_portfulio/feature/project/widget/project_header.dart';
 
-import '../feature/home/desktop/header_desktop.dart';
-import '../feature/home/mobile/header_mobile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -42,7 +40,7 @@ class _HomePageState extends State<HomePage> {
                   child: SingleChildScrollView(
                     controller: scrollController,
                     child: Padding(
-                      padding: const EdgeInsets.all(28.0),
+                      padding: const EdgeInsets.all(50.0),
                       child: Column(
                         children: [
 

@@ -9,7 +9,7 @@ class ProjectHeader extends StatelessWidget {
       builder: (context, constraints) {
         final width = constraints.maxWidth;
 
-        final horizontalPadding = (width * 0.05).clamp(20.0, 60.0);
+        final horizontalPadding = (width * 0.05).clamp(20.0, 20.0);
         final titleFont = (width * 0.06).clamp(36.0, 78.0);
         final smallFont = (width * 0.011).clamp(10.0, 13.0);
 
