@@ -1,4 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+Future<void> launchProjectUrl(BuildContext context, String? url) async {
+  if (url == null || url.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Link does not exists")),
+    );
+    return;
+  }
+
+  final Uri uri = Uri.parse(url);
+
+  final bool launched = await launchUrl(
+    uri,
+    mode: LaunchMode.externalApplication,
+  );
+
+  if (!launched && context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Link does not exists")),
+    );
+  }
+}
+
 
 class ProjectData {
   final String category;
@@ -28,6 +52,7 @@ class ProjectData {
   });
 }
 
+
 class DesktopProjectCard extends StatelessWidget {
   final ProjectData project;
 
@@ -35,13 +60,11 @@ class DesktopProjectCard extends StatelessWidget {
     super.key,
     required this.project,
   });
-
   static const double desktopBreakpoint = 600;
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-
     if (screenWidth <= desktopBreakpoint) {
       return const SizedBox.shrink();
     }
@@ -101,12 +124,11 @@ class DesktopProjectCard extends StatelessWidget {
                 const SizedBox(height: 28),
 
                 _ActionButtonsRow(
-                  onViewDetails: () {
-                    // TODO: viewDetailsUrl diye navigate/launch koro
-                  },
-                  onGithub: () {
-                    // TODO: liveSiteUrl diye launch koro
-                  },
+                  onViewDetails: () =>
+                      launchProjectUrl(context, project.viewDetailsUrl),
+                  onGithub: () =>
+                      launchProjectUrl(context, project.serverUrl),
+
 
                 ),
               ],
@@ -137,10 +159,8 @@ class _ProjectMockupImage extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: Image.asset(
             imagePath,
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
             width: double.infinity,
-
-
             errorBuilder: (context, error, stackTrace) {
               return Container(
                 height: 300,
@@ -207,6 +227,7 @@ class _Badge extends StatelessWidget {
     );
   }
 }
+
 class _CategoryLabel extends StatelessWidget {
   final String text;
 
@@ -297,7 +318,6 @@ class _TechTagsWrap extends StatelessWidget {
   }
 }
 
-
 class _ActionButtonsRow extends StatelessWidget {
   final VoidCallback onViewDetails;
   final VoidCallback onGithub;
@@ -350,7 +370,6 @@ class _ActionButtonsRow extends StatelessWidget {
     );
   }
 }
-
 class MobileProjectCard extends StatelessWidget {
   final ProjectData project;
 
@@ -364,6 +383,8 @@ class MobileProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
+
+
     if (screenWidth > desktopBreakpoint) {
       return const SizedBox.shrink();
     }
@@ -372,6 +393,7 @@ class MobileProjectCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
+        color: const Color(0xFF0A0A0A),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -414,14 +436,11 @@ class MobileProjectCard extends StatelessWidget {
           // Tech tags
           _TechTagsWrap(tags: project.techTags),
           const SizedBox(height: 24),
-
           _MobileActionButtonsColumn(
-            onViewDetails: () {
-              // TODO: viewDetailsUrl diye navigate/launch koro
-            },
-            onGithub: () {
-              // TODO: liveSiteUrl diye launch koro
-            },
+            onViewDetails: () =>
+                launchProjectUrl(context, project.viewDetailsUrl),
+            onGithub: () => launchProjectUrl(context, project.serverUrl),
+
 
           ),
         ],
@@ -491,7 +510,6 @@ class _MobileActionButtonsColumn extends StatelessWidget {
     );
   }
 }
-
 class ResponsiveProjectCard extends StatelessWidget {
   final ProjectData project;
 
@@ -514,54 +532,6 @@ class ResponsiveProjectCard extends StatelessWidget {
           return MobileProjectCard(project: project);
         }
       },
-    );
-  }
-}
-
-
-class ProjectSectionExample extends StatelessWidget {
-  const ProjectSectionExample({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final project = ProjectData(
-      category:'Flutter E-Commerce Application • REST API • Firebase Authentication',
-      title: 'CraftyBay – Modern E-Commerce Mobile App',
-      description:
-      'A modern and fully responsive Flutter e-commerce application built with Clean Architecture and Provider state management. The app delivers a smooth shopping experience with secure authentication, dynamic product browsing, category filtering, product search, wishlist management, cart functionality, and order processing through REST APIs.',
-
-      bulletPoints: [
-
-        'Implemented dynamic product listing, category browsing, and product details using REST API integration',
-
-        'Developed secure user authentication with email verification, login, registration, and profile management',
-
-        'Built wishlist, shopping cart, product reviews, and order management with responsive UI across Android devices',
-
-        'Integrated image sliders, search functionality, product variants, and real-time state management using Provider',
-
-      ],
-      techTags: [
-
-        'Flutter',
-        'Dart',
-        'REST API',
-        'Provider',
-        'Firebase',
-        'Shared Preferences',
-        'Clean Architecture',
-        'Material Design',
-
-      ],
-      imagePath: "assets/images/crafty_bay_cover.png",
-    );
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: ResponsiveProjectCard(project: project),
-      ),
     );
   }
 }
