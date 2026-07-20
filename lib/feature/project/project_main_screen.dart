@@ -16,9 +16,6 @@ class ProjectsPage extends StatelessWidget {
             ProjectHeader(),
             SizedBox(height: 60),
 
-            ProjectSection(number: '01',
-                child: Text(""))
-
 
 
 

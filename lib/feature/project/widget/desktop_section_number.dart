@@ -14,9 +14,8 @@ class DesktopSectionNumber extends StatelessWidget {
       child: Text(
         number,
         style: TextStyle(
-          fontSize: 220,
+          fontSize: 180,
           fontWeight: FontWeight.w900,
-          color: Colors.transparent,
           height: 0.9,
           letterSpacing: -10,
           foreground: Paint()

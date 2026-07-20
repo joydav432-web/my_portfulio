@@ -14,9 +14,8 @@ class MobileSectionNumber extends StatelessWidget {
       child: Text(
         number,
         style: TextStyle(
-          fontSize: 120,
+          fontSize: 100,
           fontWeight: FontWeight.w900,
-          color: Colors.transparent,
           height: 0.9,
           letterSpacing: -5,
           foreground: Paint()
