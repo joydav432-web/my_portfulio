@@ -44,20 +44,6 @@ class _HomePageState extends State<HomePage> {
                           const SizedBox(height: 20),
 
                           ProjectCardSection(isDesktop: isDesktop),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         ],
                       ),
                     ),
@@ -71,4 +57,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

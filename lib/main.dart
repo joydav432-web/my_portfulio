@@ -19,9 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Portfolio',
       debugShowCheckedModeBanner: false,
 
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xff0C0C0C),
-      ),
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xff0C0C0C)),
 
       initialRoute: '/',
 
@@ -30,7 +28,6 @@ class MyApp extends StatelessWidget {
         '/projects': (context) => const ProjectsPage(),
         '/contact': (context) => const ContactPage(),
         '/about': (context) => const AboutPage(),
-
       },
     );
   }
