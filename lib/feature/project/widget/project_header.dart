@@ -67,30 +67,41 @@ class ProjectHeader extends StatelessWidget {
                       ),
                     ),
 
+
                     InkWell(
-                      onTap: () {},
+                      onTap: (){},
                       child: Row(
                         children: [
+
                           Text(
                             "ALL PROJECTS",
                             style: TextStyle(
                               color: Colors.white70,
-                              fontSize: smallFont,
+                              fontSize: 16,
                               letterSpacing: 2,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
 
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
 
-                          const Icon(
+                          Icon(
                             Icons.arrow_forward,
                             color: Colors.white70,
                             size: 18,
                           ),
+
+
+
                         ],
                       ),
-                    ),
+                    )
+
+
+
+
+
+
                   ],
                 )
 

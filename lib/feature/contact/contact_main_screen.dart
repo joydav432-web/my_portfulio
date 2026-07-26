@@ -9,9 +9,15 @@ class ContactPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MainLayout(
       selectedIndex: 3,
-      child: Center(
-        child: Text("Contact Page"),
-      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+
+
+
+          ],
+        ),
+      )
     );
   }
 }

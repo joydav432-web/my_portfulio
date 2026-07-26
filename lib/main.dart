@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_portfulio/feature/contact/contact_main_screen.dart';
 import 'package:my_portfulio/feature/home/main_home_screen.dart';
 import 'package:my_portfulio/feature/project/project_main_screen.dart';
-import 'package:my_portfulio/scree/home_page.dart';
 
 import 'feature/about/about_main_screen.dart';
 
