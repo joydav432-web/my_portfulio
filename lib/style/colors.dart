@@ -15,19 +15,6 @@ class CustomColor{
   static const Color whiteSecondary = Color(0xffC8C9CE);
   static const Color hintColor = Color(0xff1F150C);
 
-  static const background = Color(0xff0F0F0F);
-
-  static const card = Color(0xff171717);
-
-  static const border = Color(0xff2D2D2D);
-
-  static const white = Colors.white;
-
-  static const text = Color(0xffBDBDBD);
-
-  static const primary = Color(0xffFF4D2D);
-
-  static const divider = Color(0xff2C2C2C);
 
 
 }

@@ -4,6 +4,9 @@ import 'package:my_portfulio/feature/home/desktop/tehcnical_stack_section.dart';
 import 'package:my_portfulio/feature/home/mobile/mobile_home.dart';
 
 import '../feature/project/widget/project_card_section.dart';
+// NOTE: nijer actual folder structure onujayi path thik kore niyo
+import '../feature/contact/desktop/desktop_contact.dart';
+import '../feature/contact/mobile/mobile_contact.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,6 +47,14 @@ class _HomePageState extends State<HomePage> {
                           const SizedBox(height: 20),
 
                           ProjectCardSection(isDesktop: isDesktop),
+
+                          const SizedBox(height: 20),
+
+                          isDesktop
+                              ? const DesktopContact()
+                              : const MobileContact(),
+
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
