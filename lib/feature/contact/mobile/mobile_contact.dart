@@ -162,6 +162,7 @@ class _MobileContactState extends State<MobileContact> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
+            color: Color(0xff131312),
             border: Border.all(color: _borderColor),
             borderRadius: BorderRadius.circular(4),
           ),
@@ -240,26 +241,6 @@ class _MobileContactState extends State<MobileContact> {
           ),
         ),
         // ---------- Floating WhatsApp button ----------
-        Positioned(
-          bottom: -18,
-          right: 16,
-          child: Container(
-            width: 48,
-            height: 48,
-            decoration: const BoxDecoration(
-              color: _whatsappGreen,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 10,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            child: const Icon(Icons.chat, color: Colors.white, size: 22),
-          ),
-        ),
       ],
     );
   }

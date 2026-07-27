@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_portfulio/widgets/hireme_button.dart';
 import 'package:my_portfulio/widgets/responsive.dart';
 import 'package:my_portfulio/widgets/side_logo.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../widgets/header_circularavatar.dart';
 import '../../../widgets/nav_item.dart';
@@ -266,8 +267,11 @@ class _HeaderDesktopState extends State<HeaderDesktop>
                         fit: BoxFit.scaleDown,
                         child: Row(
                           children: [
-                            HoverCircleAvatar(
-                              image: "assets/images/github.png",
+                            InkWell(
+                              onTap: _openGitHub,
+                              child: HoverCircleAvatar(
+                                image: "assets/images/github.png",
+                              ),
                             ),
 
                             SizedBox(width: iconGap),
@@ -305,5 +309,16 @@ class _HeaderDesktopState extends State<HeaderDesktop>
         );
       },
     );
+  }
+
+  Future<void> _openGitHub() async {
+    final Uri url = Uri.parse('https://github.com/joydav432-web');
+
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

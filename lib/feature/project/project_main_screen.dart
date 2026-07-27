@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfulio/feature/project/widget/project_card_section.dart';
+import '../fotter/desktop_fotter.dart';
+import '../fotter/mobile_fotter.dart';
 import '../widget/main_layout.dart';
-
 class ProjectsPage extends StatelessWidget {
   const ProjectsPage({super.key});
 
@@ -9,15 +10,24 @@ class ProjectsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MainLayout(
       selectedIndex: 2,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isDesktop = constraints.maxWidth >= 600;
 
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 60),
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 60),
 
-            ProjectCardSection(isDesktop: true),
-          ],
-        ),
+                ProjectCardSection(isDesktop: isDesktop),
+
+                const SizedBox(height: 60),
+
+                isDesktop ? const DesktopFooter() : const MobileFooter(),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

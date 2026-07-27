@@ -3,8 +3,9 @@ import 'package:my_portfulio/feature/home/desktop/new_desktopHome.dart';
 import 'package:my_portfulio/feature/home/desktop/tehcnical_stack_section.dart';
 import 'package:my_portfulio/feature/home/mobile/mobile_home.dart';
 
+import '../feature/fotter/desktop_fotter.dart';
+import '../feature/fotter/mobile_fotter.dart';
 import '../feature/project/widget/project_card_section.dart';
-// NOTE: nijer actual folder structure onujayi path thik kore niyo
 import '../feature/contact/desktop/desktop_contact.dart';
 import '../feature/contact/mobile/mobile_contact.dart';
 
@@ -55,6 +56,10 @@ class _HomePageState extends State<HomePage> {
                               : const MobileContact(),
 
                           const SizedBox(height: 20),
+
+                          isDesktop
+                              ? const DesktopFooter()
+                              : const MobileFooter(),
                         ],
                       ),
                     ),

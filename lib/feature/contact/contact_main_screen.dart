@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../fotter/desktop_fotter.dart';
+import '../fotter/mobile_fotter.dart';
 import '../widget/main_layout.dart';
 import 'desktop/desktop_contact.dart';
 import 'mobile/mobile_contact.dart';
@@ -14,13 +16,14 @@ class ContactPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // 600px cheye beshi hole Desktop layout,
-            // kom hole Mobile layout dekhabe
-            if (constraints.maxWidth >= 600) {
-              return const DesktopContact();
-            } else {
-              return const MobileContact();
-            }
+            final isDesktop = constraints.maxWidth >= 600;
+
+            return Column(
+              children: [
+                isDesktop ? const DesktopContact() : const MobileContact(),
+                isDesktop ? const DesktopFooter() : const MobileFooter(),
+              ],
+            );
           },
         ),
       ),

@@ -173,6 +173,7 @@ class _DesktopContactState extends State<DesktopContact> {
         Container(
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
+            color: Color(0xff131312),
             border: Border.all(color: _borderColor),
             borderRadius: BorderRadius.circular(4),
           ),
