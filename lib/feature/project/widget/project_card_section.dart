@@ -55,6 +55,12 @@ class ProjectCardSection extends StatelessWidget {
               'Material Design',
             ],
             imagePath: 'assets/images/crafty_bay_cover.png',
+            serverUrl: 'https://github.com/joydav432-web/crafty_bay', 
+            githubUrl: '',
+
+
+            
+
           ),
         ),
 
@@ -96,7 +102,9 @@ class ProjectCardSection extends StatelessWidget {
             ],
             imagePath: 'assets/images/trucklack_cover.png',
 
+            githubUrl: '',
 
+            serverUrl: 'https://github.com/joydav432-web/Tracklack',
 
           ),
         ),
@@ -139,6 +147,9 @@ class ProjectCardSection extends StatelessWidget {
               'Material Design',
             ],
             imagePath: 'assets/images/acela_cover.png',
+
+            githubUrl: '',
+            serverUrl: 'https://github.com/joydav432-web/ascela',
 
 
 

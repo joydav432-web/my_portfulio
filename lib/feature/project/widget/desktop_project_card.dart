@@ -35,7 +35,7 @@ class ProjectData {
   final bool isLive;
   final String? viewDetailsUrl;
   final String? liveSiteUrl;
-  final String? serverUrl;
+  final String serverUrl;
 
   const ProjectData({
     required this.category,
@@ -48,7 +48,8 @@ class ProjectData {
     this.isLive = true,
     this.viewDetailsUrl,
     this.liveSiteUrl,
-    this.serverUrl,
+    required this.serverUrl,
+     required String githubUrl,
   });
 }
 
@@ -127,7 +128,7 @@ class DesktopProjectCard extends StatelessWidget {
                   onViewDetails: () =>
                       launchProjectUrl(context, project.viewDetailsUrl),
                   onGithub: () =>
-                      launchProjectUrl(context, project.serverUrl),
+                      launchProjectUrl(context, project.serverUrl ),
 
 
                 ),
