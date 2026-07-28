@@ -244,16 +244,16 @@ class MobileFooter extends StatelessWidget {
 
     switch (label.toLowerCase()) {
       case 'home':
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         break;
       case 'about':
-        Navigator.pushReplacementNamed(context, '/about');
+        Navigator.pushNamedAndRemoveUntil(context, '/about', (route) => false);
         break;
       case 'projects':
-        Navigator.pushReplacementNamed(context, '/projects');
+        Navigator.pushNamedAndRemoveUntil(context, '/projects', (route) => false);
         break;
       case 'contact':
-        Navigator.pushReplacementNamed(context, '/contact');
+        Navigator.pushNamedAndRemoveUntil(context, '/contact', (route) => false);
         break;
     }
   }

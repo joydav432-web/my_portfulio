@@ -1,34 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-
-/// ==========================================================
-/// USAGE (just call this from your resume button):
-///
-///   onTap: () => showResumeViewer(context),
-///
-/// ==========================================================
-
-class ApiUrls {
-  ApiUrls._();
-
-  // NOTE: Google Drive "view" link kaj korbe na direct.
-  // Eita export=download format e convert kora hoyeche.
-  static const String resumeUrl =
-      'https://drive.google.com/uc?export=download&id=1Ems9TMWkw_aXC40VDRao3nhW8AfhBI9S';
-}
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void showResumeViewer(BuildContext context) {
-  debugPrint('📄 [ResumeViewer] Opening resume viewer... url: ${ApiUrls.resumeUrl}');
   Navigator.of(context).push(
     PageRouteBuilder(
-      transitionDuration: const Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 350),
       pageBuilder: (context, animation, secondaryAnimation) {
         return FadeTransition(
           opacity: animation,
           child: ScaleTransition(
-            scale: Tween<double>(begin: 0.92, end: 1.0).animate(
-              CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+            scale: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
             ),
             child: const ResumeViewerPage(),
           ),
@@ -46,67 +30,119 @@ class ResumeViewerPage extends StatefulWidget {
 }
 
 class _ResumeViewerPageState extends State<ResumeViewerPage> {
-  final PdfViewerController _pdfController = PdfViewerController();
-  bool _hasError = false;
   bool _isLoading = true;
+  bool _hasError = false;
   String _errorMessage = '';
 
   static const _accentColor = Color(0xFFE84C3D);
 
   @override
+  void initState() {
+    super.initState();
+    _loadPdf();
+  }
+
+  Future<void> _loadPdf() async {
+    try {
+      await rootBundle.load('assets/pdf/joy_resume.pdf');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+          _errorMessage = e.toString();
+        });
+      }
+    }
+  }
+
+  Future<void> _openInBrowser() async {
+    final uri = Uri.parse('https://drive.google.com/file/d/1Ems9TMWkw_aXC40VDRao3nhW8AfhBI9S/view?usp=sharing');
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unable to open resume link.')),
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xff0f0f10),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xff0f0f10),
         elevation: 0,
         title: const Text('Resume'),
-        actions: _hasError
-            ? null
-            : [
-                IconButton(
-                  tooltip: 'Zoom in',
-                  icon: const Icon(Icons.zoom_in),
-                  onPressed: () => _pdfController.zoomLevel += 0.25,
-                ),
-                IconButton(
-                  tooltip: 'Zoom out',
-                  icon: const Icon(Icons.zoom_out),
-                  onPressed: () => _pdfController.zoomLevel -= 0.25,
-                ),
-              ],
-      ),
-      body: Stack(
-        children: [
-          if (!_hasError)
-            SfPdfViewer.network(
-              ApiUrls.resumeUrl,
-              controller: _pdfController,
-              onDocumentLoaded: (PdfDocumentLoadedDetails details) {
-                debugPrint(
-                  '✅ [ResumeViewer] PDF loaded successfully. Pages: ${details.document.pages.count}',
-                );
-                setState(() => _isLoading = false);
-              },
-              onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
-                // Eikhane error ta terminal e clearly dekhabe
-                debugPrint('❌ [ResumeViewer] PDF load FAILED');
-                debugPrint('❌ [ResumeViewer] description: ${details.description}');
-                debugPrint('❌ [ResumeViewer] error: ${details.error}');
-                setState(() {
-                  _hasError = true;
-                  _isLoading = false;
-                  _errorMessage = details.description;
-                });
-              },
-            ),
-          if (_isLoading && !_hasError)
-            const Center(
-              child: CircularProgressIndicator(color: _accentColor),
-            ),
-          if (_hasError) _buildErrorState(),
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+        actions: [
+          IconButton(
+            onPressed: _openInBrowser,
+            icon: const Icon(Icons.open_in_new),
+            tooltip: 'Open in browser',
+          ),
         ],
       ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator(color: _accentColor))
+          : _hasError
+              ? _buildErrorState()
+              : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Card(
+                      color: const Color(0xff171717),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.description_outlined, color: _accentColor, size: 48),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Resume PDF is ready',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Your resume file is available locally. Open it in a browser to view the full PDF.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white70, height: 1.5),
+                            ),
+                            const SizedBox(height: 20),
+                            ElevatedButton.icon(
+                              onPressed: _openInBrowser,
+                              icon: const Icon(Icons.open_in_new),
+                              label: const Text('Open Resume'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _accentColor,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
     );
   }
 
@@ -130,20 +166,14 @@ class _ResumeViewerPageState extends State<ResumeViewerPage> {
             const SizedBox(height: 8),
             Text(
               _errorMessage.isEmpty
-                  ? 'Unknown error — check terminal (debugPrint) for details.'
+                  ? 'Please check that assets/pdf/joy_resume.pdf exists.'
                   : _errorMessage,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white54, fontSize: 13),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
-              onPressed: () {
-                debugPrint('🔄 [ResumeViewer] Retry pressed');
-                setState(() {
-                  _hasError = false;
-                  _isLoading = true;
-                });
-              },
+              onPressed: _loadPdf,
               icon: const Icon(Icons.refresh),
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
@@ -155,11 +185,5 @@ class _ResumeViewerPageState extends State<ResumeViewerPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _pdfController.dispose();
-    super.dispose();
   }
 }
