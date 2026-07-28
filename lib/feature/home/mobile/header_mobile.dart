@@ -37,7 +37,7 @@ class NewHeaderMobile extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: SideLogo(
-                      onTap: () {},
+                      onTap: () => Navigator.pushReplacementNamed(context, '/'),
                     ),
                   ),
                 ),

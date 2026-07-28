@@ -1,7 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:my_portfulio/feature/resume/resume_viewer.dart';
 
-class DesktopHome extends StatelessWidget {
+class DesktopHome extends StatefulWidget {
   const DesktopHome({super.key});
+
+  @override
+  State<DesktopHome> createState() => _DesktopHomeState();
+}
+
+class _DesktopHomeState extends State<DesktopHome>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 260),
+      reverseDuration: const Duration(milliseconds: 220),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.03).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +53,11 @@ class DesktopHome extends StatelessWidget {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            /// LEFT
             Expanded(
               flex: 6,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// TOP INFO
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     spacing: (width * .015).clamp(8.0, 20.0),
@@ -143,7 +170,8 @@ class DesktopHome extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {},
+
+                          onPressed:  () => showResumeViewer(context),
                           icon: Icon(
                             Icons.download,
                             size: (width * .016).clamp(18.0, 22.0),
@@ -170,7 +198,7 @@ class DesktopHome extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () => Navigator.pushNamed(context, '/projects'),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
@@ -213,23 +241,43 @@ class DesktopHome extends StatelessWidget {
                     maxWidth: imageSize,
                     maxHeight: imageSize,
                   ),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          (width * .015).clamp(18.0, 24.0),
-                        ),
-                        image: const DecorationImage(
-                          image: AssetImage("assets/images/my_3.png"),
-                          fit: BoxFit.cover,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white.withOpacity(.05),
-                            blurRadius: 20,
+                  child: MouseRegion(
+                    onEnter: (_) => _controller.forward(),
+                    onExit: (_) => _controller.reverse(),
+                    child: AnimatedBuilder(
+                      animation: _scaleAnimation,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _scaleAnimation.value,
+                          child: child,
+                        );
+                      },
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              (width * .015).clamp(18.0, 24.0),
+                            ),
+                            image: const DecorationImage(
+                              image: AssetImage("assets/images/my_3.png"),
+                              fit: BoxFit.cover,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFFF5C5C).withOpacity(.18),
+                                blurRadius: 24,
+                                spreadRadius: 3,
+                                offset: const Offset(0, 12),
+                              ),
+                              BoxShadow(
+                                color: Colors.black.withOpacity(.35),
+                                blurRadius: 30,
+                                offset: const Offset(0, 18),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),

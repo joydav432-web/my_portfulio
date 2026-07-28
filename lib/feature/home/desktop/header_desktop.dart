@@ -126,7 +126,7 @@ class _HeaderDesktopState extends State<HeaderDesktop>
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: SideLogo(
-                      onTap: () {},
+                      onTap: () => Navigator.pushReplacementNamed(context, '/'),
                     ),
                   ),
                 ),
@@ -276,8 +276,11 @@ class _HeaderDesktopState extends State<HeaderDesktop>
 
                             SizedBox(width: iconGap),
 
-                            HoverCircleAvatar(
-                              image: "assets/images/linkedin.png",
+                            InkWell(
+                              onTap: _openLinkedIn,
+                              child: HoverCircleAvatar(
+                                image: "assets/images/linkedin.png",
+                              ),
                             ),
 
                             SizedBox(width: iconGap),
@@ -293,7 +296,7 @@ class _HeaderDesktopState extends State<HeaderDesktop>
                             SizedBox(width: iconGap),
 
                             HireMeButton(
-                              onPressed: () {},
+                              onPressed: () => Navigator.pushReplacementNamed(context, '/contact'),
                             ),
                           ],
                         ),
@@ -316,6 +319,17 @@ class _HeaderDesktopState extends State<HeaderDesktop>
 
     if (!await launchUrl(
       url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Future<void> _openLinkedIn() async {
+    const url = 'https://www.linkedin.com/';
+
+    if (!await launchUrl(
+      Uri.parse(url),
       mode: LaunchMode.externalApplication,
     )) {
       throw Exception('Could not launch $url');

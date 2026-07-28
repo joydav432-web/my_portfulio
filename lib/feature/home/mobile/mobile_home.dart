@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_portfulio/feature/resume/resume_viewer.dart';
 
 class MobileHero extends StatelessWidget {
   const MobileHero();
@@ -159,7 +160,7 @@ class MobileHero extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () => showResumeViewer(context),
                   icon: Icon(
                     Icons.download,
                     size: (width * 0.05).clamp(18.0, 24.0),
@@ -191,7 +192,7 @@ class MobileHero extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () => Navigator.pushNamed(context, '/projects'),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,

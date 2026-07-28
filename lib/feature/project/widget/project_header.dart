@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ProjectHeader extends StatelessWidget {
-  const ProjectHeader({super.key});
+  const ProjectHeader({
+    super.key,
+    this.showAllProjectsLink = false,
+  });
+
+  final bool showAllProjectsLink;
 
   @override
   Widget build(BuildContext context) {
@@ -68,34 +73,29 @@ class ProjectHeader extends StatelessWidget {
                     ),
 
 
-                    InkWell(
-                      onTap: (){},
-                      child: Row(
-                        children: [
-
-                          Text(
-                            "ALL PROJECTS",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.w600,
+                    if (showAllProjectsLink)
+                      InkWell(
+                        onTap: () => Navigator.pushNamed(context, '/projects'),
+                        child: Row(
+                          children: [
+                            Text(
+                              "ALL PROJECTS",
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16,
+                                letterSpacing: 2,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-
-                          SizedBox(width: 8),
-
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white70,
-                            size: 18,
-                          ),
-
-
-
-                        ],
-                      ),
-                    )
+                            SizedBox(width: 8),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white70,
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                      )
 
 
 
@@ -123,32 +123,30 @@ class ProjectHeader extends StatelessWidget {
 
                     SizedBox(height: (width * .05).clamp(18.0, 25.0)),
 
-                    InkWell(
-                      onTap: () {},
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-
-                          Text(
-                            "ALL PROJECTS",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: smallFont,
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.w600,
+                    if (showAllProjectsLink)
+                      InkWell(
+                        onTap: () => Navigator.pushNamed(context, '/projects'),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "ALL PROJECTS",
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: smallFont,
+                                letterSpacing: 2,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-
-                          const SizedBox(width: 8),
-
-                          const Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white70,
-                            size: 18,
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white70,
+                              size: 18,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
 

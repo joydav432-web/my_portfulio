@@ -11,8 +11,8 @@ class DesktopFooter extends StatelessWidget {
     super.key,
     this.onNavTap,
     this.email = 'joydav432@gmail.com',
-    this.githubUrl = 'https://github.com/',
-    this.linkedinUrl = 'https://linkedin.com/',
+    this.githubUrl = 'https://github.com/joydav432-web',
+    this.linkedinUrl = 'https://www.linkedin.com/in/joy-deb-2a8b41407/',
     this.resumeUrl = '',
   });
 
@@ -31,40 +31,41 @@ class DesktopFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final isCompact = MediaQuery.of(context).size.width < 900;
 
+    return Container(
       decoration: BoxDecoration(
         color: const Color(0xff131312),
-        border: Border.all(color: _borderColor,
-        width: 2
-        ),
-        borderRadius: BorderRadius.circular(12)
+        border: Border.all(color: _borderColor, width: 2),
+        borderRadius: BorderRadius.circular(12),
       ),
-
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(80, 50, 80, 30),
+      padding: EdgeInsets.fromLTRB(isCompact ? 24 : 80, 40, isCompact ? 24 : 80, 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 5,
-                child: _buildBrandSection(),
-              ),
-              const SizedBox(width: 40),
-              Expanded(
-                flex: 2,
-                child: _buildNavColumn(),
-              ),
-              const SizedBox(width: 60),
-              Expanded(
-                flex: 3,
-                child: _buildContactColumn(),
-              ),
-            ],
-          ),
+          if (isCompact)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildBrandSection(),
+                const SizedBox(height: 24),
+                _buildNavColumn(context),
+                const SizedBox(height: 20),
+                _buildContactColumn(context),
+              ],
+            )
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 5, child: _buildBrandSection()),
+                const SizedBox(width: 40),
+                Expanded(flex: 2, child: _buildNavColumn(context)),
+                const SizedBox(width: 60),
+                Expanded(flex: 3, child: _buildContactColumn(context)),
+              ],
+            ),
           const SizedBox(height: 40),
           Container(height: 1, color: _borderColor),
           const SizedBox(height: 24),
@@ -168,7 +169,7 @@ class DesktopFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildNavColumn() {
+  Widget _buildNavColumn(BuildContext context) {
     const items = ['Home', 'About', 'Projects', 'Contact'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,14 +189,14 @@ class DesktopFooter extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 14),
             child: _HoverText(
               text: item,
-              onTap: onNavTap == null ? null : () => onNavTap!(item),
+              onTap: () => _handleNavTap(context, item),
             ),
           ),
       ],
     );
   }
 
-  Widget _buildContactColumn() {
+  Widget _buildContactColumn(BuildContext context) {
     final items = [
       (Icons.mail_outline, email, 'mailto:$email'),
       (Icons.code, 'GitHub', githubUrl),
@@ -225,6 +226,28 @@ class DesktopFooter extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  void _handleNavTap(BuildContext context, String label) {
+    if (onNavTap != null) {
+      onNavTap!(label);
+      return;
+    }
+
+    switch (label.toLowerCase()) {
+      case 'home':
+        Navigator.pushReplacementNamed(context, '/');
+        break;
+      case 'about':
+        Navigator.pushReplacementNamed(context, '/about');
+        break;
+      case 'projects':
+        Navigator.pushReplacementNamed(context, '/projects');
+        break;
+      case 'contact':
+        Navigator.pushReplacementNamed(context, '/contact');
+        break;
+    }
   }
 }
 

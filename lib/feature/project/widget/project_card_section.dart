@@ -9,15 +9,17 @@ class ProjectCardSection extends StatelessWidget {
   const ProjectCardSection({
     super.key,
     required this.isDesktop,
+    this.showAllProjectsLink = false,
   });
 
   final bool isDesktop;
+  final bool showAllProjectsLink;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const ProjectHeader(),
+        ProjectHeader(showAllProjectsLink: showAllProjectsLink),
 
         isDesktop
             ? const DesktopSectionNumber(number: '01')

@@ -11,8 +11,8 @@ class MobileFooter extends StatelessWidget {
     super.key,
     this.onNavTap,
     this.email = 'joydav432@gmail.com',
-    this.githubUrl = 'https://github.com/',
-    this.linkedinUrl = 'https://linkedin.com/',
+    this.githubUrl = 'https://github.com/joydav432-web',
+    this.linkedinUrl = 'https://www.linkedin.com/in/joy-deb-2a8b41407/',
     this.resumeUrl = '',
   });
 
@@ -31,8 +31,9 @@ class MobileFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final isCompact = MediaQuery.of(context).size.width < 700;
 
+    return Container(
       decoration: BoxDecoration(
         border: Border.all(color: _borderColor, width: 2),
         borderRadius: BorderRadius.circular(12),
@@ -44,14 +45,24 @@ class MobileFooter extends StatelessWidget {
         children: [
           _buildBrandSection(),
           const SizedBox(height: 32),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: _buildNavColumn()),
-              const SizedBox(width: 20),
-              Expanded(child: _buildContactColumn()),
-            ],
-          ),
+          if (isCompact)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildNavColumn(context),
+                const SizedBox(height: 20),
+                _buildContactColumn(context),
+              ],
+            )
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: _buildNavColumn(context)),
+                const SizedBox(width: 20),
+                Expanded(child: _buildContactColumn(context)),
+              ],
+            ),
           const SizedBox(height: 32),
           Container(height: 1, color: _borderColor),
           const SizedBox(height: 20),
@@ -165,7 +176,7 @@ class MobileFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildNavColumn() {
+  Widget _buildNavColumn(BuildContext context) {
     const items = ['Home', 'About', 'Projects', 'Contact'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,14 +197,14 @@ class MobileFooter extends StatelessWidget {
             child: _TapText(
               text: item,
               fontSize: 13,
-              onTap: onNavTap == null ? null : () => onNavTap!(item),
+              onTap: () => _handleNavTap(context, item),
             ),
           ),
       ],
     );
   }
 
-  Widget _buildContactColumn() {
+  Widget _buildContactColumn(BuildContext context) {
     final items = [
       (Icons.mail_outline, 'Email', 'mailto:$email'),
       (Icons.code, 'GitHub', githubUrl),
@@ -223,6 +234,28 @@ class MobileFooter extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  void _handleNavTap(BuildContext context, String label) {
+    if (onNavTap != null) {
+      onNavTap!(label);
+      return;
+    }
+
+    switch (label.toLowerCase()) {
+      case 'home':
+        Navigator.pushReplacementNamed(context, '/');
+        break;
+      case 'about':
+        Navigator.pushReplacementNamed(context, '/about');
+        break;
+      case 'projects':
+        Navigator.pushReplacementNamed(context, '/projects');
+        break;
+      case 'contact':
+        Navigator.pushReplacementNamed(context, '/contact');
+        break;
+    }
   }
 }
 
