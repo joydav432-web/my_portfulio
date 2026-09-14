@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ---------- Theme colors ----------
 const _accentColor = Color(0xFFE84C3D);
 const _greyText = Color(0xFF9CA3AF);
 const _borderColor = Colors.white12;
 const _fieldFill = Color(0xFF141414);
-const _whatsappGreen = Color(0xFF25D366);
 
 class MobileContact extends StatefulWidget {
   const MobileContact({super.key});
@@ -26,6 +26,13 @@ class _MobileContactState extends State<MobileContact> {
     _emailController.dispose();
     _messageController.dispose();
     super.dispose();
+  }
+
+  Future<void> _launch(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   @override
@@ -65,13 +72,15 @@ class _MobileContactState extends State<MobileContact> {
           _infoTile(
             icon: Icons.mail_outline,
             label: 'Email',
-            value: 'joydav432@gamil.com',
+            value: 'joydav432@gmail.com',
+            onTap: () => _launch('mailto:joydav432@gmail.com'),
           ),
           _divider(),
           _infoTile(
             icon: Icons.chat_bubble_outline,
             label: 'Whatsapp',
             value: '+880 1793787087',
+            onTap: () => _launch('https://wa.me/8801793787087'),
           ),
           _divider(),
           _infoTile(
@@ -112,41 +121,48 @@ class _MobileContactState extends State<MobileContact> {
     required IconData icon,
     required String label,
     required String value,
+    VoidCallback? onTap,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: _accentColor, size: 16),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label.toUpperCase(),
-                  style: const TextStyle(
-                    fontFamily: 'monospace',
-                    fontSize: 10,
-                    letterSpacing: 2,
-                    color: _greyText,
-                    fontWeight: FontWeight.w600,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: _accentColor, size: 16),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label.toUpperCase(),
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 10,
+                      letterSpacing: 2,
+                      color: _greyText,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                  const SizedBox(height: 5),
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            if (onTap != null)
+              const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.white38),
+          ],
+        ),
       ),
     );
   }
@@ -156,76 +172,81 @@ class _MobileContactState extends State<MobileContact> {
   }
 
   Widget _buildFormCard() {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Color(0xff131312),
-            border: Border.all(color: _borderColor),
-            borderRadius: BorderRadius.circular(4),
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xff131312),
+        border: Border.all(color: _borderColor),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Send a message',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Send a message',
-                style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+          const SizedBox(height: 6),
+          const Text(
+            "I'll get back to you within 1-2 hours.",
+            style: TextStyle(
+              fontFamily: 'monospace',
+              fontSize: 12,
+              color: _greyText,
+            ),
+          ),
+          const SizedBox(height: 24),
+          _buildField(
+            label: 'NAME',
+            icon: Icons.person_outline,
+            controller: _nameController,
+            hint: 'John Doe',
+          ),
+          const SizedBox(height: 16),
+          _buildField(
+            label: 'EMAIL',
+            icon: Icons.mail_outline,
+            controller: _emailController,
+            hint: 'john@example.com',
+          ),
+          const SizedBox(height: 16),
+          _buildDropdownField(),
+          const SizedBox(height: 16),
+          _buildField(
+            label: 'MESSAGE',
+            icon: Icons.chat_bubble_outline,
+            controller: _messageController,
+            hint: 'Tell me about your project...',
+            maxLines: 4,
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                final name = _nameController.text.trim();
+                final email = _emailController.text.trim();
+                final msg = _messageController.text.trim();
+                final subject = Uri.encodeComponent('[$_inquiryType] Inquiry from $name');
+                final body = Uri.encodeComponent('From: $name ($email)\n\n$msg');
+                _launch('mailto:joydav432@gmail.com?subject=$subject&body=$body');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _accentColor,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
                 ),
+                elevation: 0,
               ),
-              const SizedBox(height: 6),
-              const Text(
-                "I'll get back to you within 1-2 hours.",
-                style: TextStyle(
-                  fontFamily: 'monospace',
-                  fontSize: 12,
-                  color: _greyText,
-                ),
-              ),
-              const SizedBox(height: 22),
-              _buildField(
-                label: 'NAME',
-                icon: Icons.person_outline,
-                controller: _nameController,
-                hint: 'John Doe',
-              ),
-              const SizedBox(height: 16),
-              _buildField(
-                label: 'EMAIL',
-                icon: Icons.mail_outline,
-                controller: _emailController,
-                hint: 'john@example.com',
-              ),
-              const SizedBox(height: 16),
-              _buildDropdownField(),
-              const SizedBox(height: 16),
-              _buildField(
-                label: 'MESSAGE',
-                icon: Icons.chat_bubble_outline,
-                controller: _messageController,
-                hint: 'Tell me about your project...',
-                maxLines: 5,
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: submit logic
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _accentColor,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
                     'SEND MESSAGE',
                     style: TextStyle(
                       color: Colors.white,
@@ -235,13 +256,14 @@ class _MobileContactState extends State<MobileContact> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
+                  SizedBox(width: 8),
+                  Icon(Icons.arrow_forward, color: Colors.white, size: 16),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-        // ---------- Floating WhatsApp button ----------
-      ],
+        ],
+      ),
     );
   }
 
@@ -278,11 +300,11 @@ class _MobileContactState extends State<MobileContact> {
           style: const TextStyle(color: Colors.white, fontSize: 14),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: _greyText.withOpacity(0.6)),
+            hintStyle: TextStyle(color: _greyText.withValues(alpha: 0.6)),
             filled: true,
             fillColor: _fieldFill,
             contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
               borderSide: const BorderSide(color: _borderColor),

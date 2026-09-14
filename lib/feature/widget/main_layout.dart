@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/cursor_glow.dart';
 import '../../widgets/side_logo.dart';
 import '../home/desktop/header_desktop.dart';
 import '../home/mobile/header_mobile.dart';
@@ -74,7 +75,7 @@ class _MainLayoutState extends State<MainLayout> {
         builder: (context, constraints) {
           final isDesktop = constraints.maxWidth > 600;
 
-          return Column(
+          final content = Column(
             children: [
               const SizedBox(height: 25),
               Padding(
@@ -101,6 +102,8 @@ class _MainLayoutState extends State<MainLayout> {
               ),
             ],
           );
+
+          return isDesktop ? CursorGlow(child: content) : content;
         },
       ),
     );

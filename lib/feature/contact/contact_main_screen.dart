@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_portfulio/widgets/scroll_reveal.dart';
 
 import '../fotter/desktop_fotter.dart';
 import '../fotter/mobile_fotter.dart';
@@ -20,8 +21,13 @@ class ContactPage extends StatelessWidget {
 
             return Column(
               children: [
-                isDesktop ? const DesktopContact() : const MobileContact(),
-                isDesktop ? const DesktopFooter() : const MobileFooter(),
+                ScrollReveal(
+                  child: isDesktop ? const DesktopContact() : const MobileContact(),
+                ),
+                ScrollReveal(
+                  delay: const Duration(milliseconds: 100),
+                  child: isDesktop ? const DesktopFooter() : const MobileFooter(),
+                ),
               ],
             );
           },

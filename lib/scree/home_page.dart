@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_portfulio/feature/home/desktop/new_desktopHome.dart';
 import 'package:my_portfulio/feature/home/desktop/tehcnical_stack_section.dart';
 import 'package:my_portfulio/feature/home/mobile/mobile_home.dart';
+import 'package:my_portfulio/widgets/scroll_reveal.dart';
 
 import '../feature/fotter/desktop_fotter.dart';
 import '../feature/fotter/mobile_fotter.dart';
@@ -23,9 +24,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final screenWidth = screenSize.width;
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final isDesktop = constraints.maxWidth > 600;
@@ -54,15 +52,21 @@ class _HomePageState extends State<HomePage> {
 
                           const SizedBox(height: 20),
 
-                          isDesktop
-                              ? const DesktopContact()
-                              : const MobileContact(),
+                          ScrollReveal(
+                            delay: const Duration(milliseconds: 50),
+                            child: isDesktop
+                                ? const DesktopContact()
+                                : const MobileContact(),
+                          ),
 
                           const SizedBox(height: 20),
 
-                          isDesktop
-                              ? const DesktopFooter()
-                              : const MobileFooter(),
+                          ScrollReveal(
+                            delay: const Duration(milliseconds: 50),
+                            child: isDesktop
+                                ? const DesktopFooter()
+                                : const MobileFooter(),
+                          ),
                         ],
                       ),
                     ),
