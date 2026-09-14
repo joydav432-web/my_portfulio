@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'project_details_dialog.dart';
 
 Future<void> launchProjectUrl(BuildContext context, String? url) async {
   if (url == null || url.isEmpty) {
@@ -114,11 +115,18 @@ class _DesktopProjectCardState extends State<DesktopProjectCard> {
           children: [
             Expanded(
               flex: 5,
-              child: _ProjectMockupImage(
-                imagePath: widget.project.imagePath,
-                isFullStack: widget.project.isFullStack,
-                isLive: widget.project.isLive,
-                hovered: _hovered,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () =>
+                      showProjectDetailsDialog(context, widget.project),
+                  child: _ProjectMockupImage(
+                    imagePath: widget.project.imagePath,
+                    isFullStack: widget.project.isFullStack,
+                    isLive: widget.project.isLive,
+                    hovered: _hovered,
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 48),
@@ -160,7 +168,7 @@ class _DesktopProjectCardState extends State<DesktopProjectCard> {
 
                   _ActionButtonsRow(
                     onViewDetails: () =>
-                        launchProjectUrl(context, widget.project.viewDetailsUrl),
+                        showProjectDetailsDialog(context, widget.project),
                     onGithub: () =>
                         launchProjectUrl(context, widget.project.serverUrl),
                   ),
@@ -204,82 +212,29 @@ class _ProjectMockupImage extends StatelessWidget {
               ]
             : [],
       ),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: AnimatedScale(
-              scale: hovered ? 1.03 : 1.0,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOut,
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.fitWidth,
-                width: double.infinity,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 300,
-                    color: Colors.grey.shade900,
-                    alignment: Alignment.center,
-                    child: const Icon(
-                      Icons.image_not_supported_outlined,
-                      color: Colors.grey,
-                      size: 40,
-                    ),
-                  );
-                },
-              ),
-            ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: AnimatedScale(
+          scale: hovered ? 1.03 : 1.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          child: Image.asset(
+            imagePath,
+            fit: BoxFit.fitWidth,
+            width: double.infinity,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                height: 300,
+                color: Colors.grey.shade900,
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.image_not_supported_outlined,
+                  color: Colors.grey,
+                  size: 40,
+                ),
+              );
+            },
           ),
-          Positioned(
-            left: 12,
-            bottom: 12,
-            child: Row(
-              children: [
-                if (isFullStack)
-                  _Badge(text: "FULLSTACK", color: Colors.white24),
-                if (isFullStack && isLive) const SizedBox(width: 8),
-                if (isLive)
-                  _Badge(
-                    text: "LIVE",
-                    color: Colors.greenAccent.withOpacity(0.15),
-                    textColor: Colors.greenAccent,
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  final String text;
-  final Color color;
-  final Color textColor;
-
-  const _Badge({
-    required this.text,
-    required this.color,
-    this.textColor = Colors.white,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.5,
         ),
       ),
     );
@@ -557,10 +512,13 @@ class MobileProjectCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ProjectMockupImage(
-            imagePath: project.imagePath,
-            isFullStack: project.isFullStack,
-            isLive: project.isLive,
+          GestureDetector(
+            onTap: () => showProjectDetailsDialog(context, project),
+            child: _ProjectMockupImage(
+              imagePath: project.imagePath,
+              isFullStack: project.isFullStack,
+              isLive: project.isLive,
+            ),
           ),
           const SizedBox(height: 20),
 
@@ -595,7 +553,7 @@ class MobileProjectCard extends StatelessWidget {
           const SizedBox(height: 24),
           _MobileActionButtonsColumn(
             onViewDetails: () =>
-                launchProjectUrl(context, project.viewDetailsUrl),
+                showProjectDetailsDialog(context, project),
             onGithub: () => launchProjectUrl(context, project.serverUrl),
           ),
         ],

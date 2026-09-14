@@ -43,7 +43,7 @@ class ProjectCardSection extends StatelessWidget {
                   'Flutter E-Commerce Application • REST API • Firebase Authentication',
               title: 'CraftyBay – Modern E-Commerce Mobile App',
               description:
-                  'A robust Express TypeScript backend system designed for a road-trip directory and mapping service.',
+                  'A modern full-featured Flutter E-Commerce mobile application built with real-time REST API synchronization, secure Firebase authentication, interactive product catalogs, shopping cart, and seamless checkout experience.',
               bulletPoints: [
                 'Implemented dynamic product listing, category browsing, and product details using REST API integration',
                 'Developed secure user authentication with email verification, login, registration, and profile management',
