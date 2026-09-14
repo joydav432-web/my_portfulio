@@ -49,93 +49,126 @@ class ProjectData {
     this.viewDetailsUrl,
     this.liveSiteUrl,
     required this.serverUrl,
-     required String githubUrl,
+    required String githubUrl,
   });
 }
 
 
-class DesktopProjectCard extends StatelessWidget {
+// ─── Desktop Project Card ────────────────────────────────────────────────────
+
+class DesktopProjectCard extends StatefulWidget {
   final ProjectData project;
 
   const DesktopProjectCard({
     super.key,
     required this.project,
   });
+
   static const double desktopBreakpoint = 600;
+
+  @override
+  State<DesktopProjectCard> createState() => _DesktopProjectCardState();
+}
+
+class _DesktopProjectCardState extends State<DesktopProjectCard> {
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth <= desktopBreakpoint) {
+    if (screenWidth <= DesktopProjectCard.desktopBreakpoint) {
       return const SizedBox.shrink();
     }
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            flex: 5,
-            child: _ProjectMockupImage(
-              imagePath: project.imagePath,
-              isFullStack: project.isFullStack,
-              isLive: project.isLive,
-            ),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOut,
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: _hovered
+                ? const Color(0xffAA2E1B).withOpacity(0.35)
+                : Colors.white.withOpacity(0.05),
+            width: 1.5,
           ),
-          const SizedBox(width: 48),
-
-          Expanded(
-            flex: 6,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _CategoryLabel(text: project.category),
-                const SizedBox(height: 12),
-                Text(
-                  project.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    height: 1.25,
+          color: _hovered
+              ? Colors.white.withOpacity(0.02)
+              : Colors.transparent,
+          boxShadow: _hovered
+              ? [
+                  BoxShadow(
+                    color: const Color(0xffAA2E1B).withOpacity(0.10),
+                    blurRadius: 40,
+                    spreadRadius: 5,
                   ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  project.description,
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 15,
-                    height: 1.6,
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                ...project.bulletPoints.map(
-                      (point) => _BulletPoint(text: point),
-                ),
-                const SizedBox(height: 20),
-
-                _TechTagsWrap(tags: project.techTags),
-                const SizedBox(height: 28),
-
-                _ActionButtonsRow(
-                  onViewDetails: () =>
-                      launchProjectUrl(context, project.viewDetailsUrl),
-                  onGithub: () =>
-                      launchProjectUrl(context, project.serverUrl ),
-
-
-                ),
-              ],
+                ]
+              : [],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 5,
+              child: _ProjectMockupImage(
+                imagePath: widget.project.imagePath,
+                isFullStack: widget.project.isFullStack,
+                isLive: widget.project.isLive,
+                hovered: _hovered,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 48),
+
+            Expanded(
+              flex: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _CategoryLabel(text: widget.project.category),
+                  const SizedBox(height: 12),
+                  Text(
+                    widget.project.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w800,
+                      height: 1.25,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    widget.project.description,
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 15,
+                      height: 1.6,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  ...widget.project.bulletPoints.map(
+                    (point) => _BulletPoint(text: point),
+                  ),
+                  const SizedBox(height: 20),
+
+                  _TechTagsWrap(tags: widget.project.techTags),
+                  const SizedBox(height: 28),
+
+                  _ActionButtonsRow(
+                    onViewDetails: () =>
+                        launchProjectUrl(context, widget.project.viewDetailsUrl),
+                    onGithub: () =>
+                        launchProjectUrl(context, widget.project.serverUrl),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -145,54 +178,78 @@ class _ProjectMockupImage extends StatelessWidget {
   final String imagePath;
   final bool isFullStack;
   final bool isLive;
+  final bool hovered;
 
   const _ProjectMockupImage({
     required this.imagePath,
     required this.isFullStack,
     required this.isLive,
+    this.hovered = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Image.asset(
-            imagePath,
-            fit: BoxFit.fitWidth,
-            width: double.infinity,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                height: 300,
-                color: Colors.grey.shade900,
-                alignment: Alignment.center,
-                child: const Icon(
-                  Icons.image_not_supported_outlined,
-                  color: Colors.grey,
-                  size: 40,
-                ),
-              );
-            },
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeOut,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: hovered
+            ? [
+                BoxShadow(
+                  color: const Color(0xffF44336).withOpacity(0.12),
+                  blurRadius: 30,
+                  spreadRadius: 2,
+                )
+              ]
+            : [],
+      ),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: AnimatedScale(
+              scale: hovered ? 1.03 : 1.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.fitWidth,
+                width: double.infinity,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 300,
+                    color: Colors.grey.shade900,
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.image_not_supported_outlined,
+                      color: Colors.grey,
+                      size: 40,
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
-        ),
-        Positioned(
-          left: 12,
-          bottom: 12,
-          child: Row(
-            children: [
-              if (isFullStack) _Badge(text: "FULLSTACK", color: Colors.white24),
-              if (isFullStack && isLive) const SizedBox(width: 8),
-              if (isLive)
-                _Badge(
-                  text: "LIVE",
-                  color: Colors.greenAccent.withOpacity(0.15),
-                  textColor: Colors.greenAccent,
-                ),
-            ],
+          Positioned(
+            left: 12,
+            bottom: 12,
+            child: Row(
+              children: [
+                if (isFullStack)
+                  _Badge(text: "FULLSTACK", color: Colors.white24),
+                if (isFullStack && isLive) const SizedBox(width: 8),
+                if (isLive)
+                  _Badge(
+                    text: "LIVE",
+                    color: Colors.greenAccent.withOpacity(0.15),
+                    textColor: Colors.greenAccent,
+                  ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -297,24 +354,53 @@ class _TechTagsWrap extends StatelessWidget {
       runSpacing: 8,
       children: tags
           .map(
-            (tag) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white24),
-            borderRadius: BorderRadius.circular(6),
+            (tag) => _HoverTag(tag: tag),
+          )
+          .toList(),
+    );
+  }
+}
+
+class _HoverTag extends StatefulWidget {
+  final String tag;
+  const _HoverTag({required this.tag});
+
+  @override
+  State<_HoverTag> createState() => _HoverTagState();
+}
+
+class _HoverTagState extends State<_HoverTag> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: _hovered
+                ? const Color(0xffAA2E1B).withOpacity(0.7)
+                : Colors.white24,
           ),
-          child: Text(
-            tag.toUpperCase(),
-            style: TextStyle(
-              color: Colors.grey.shade300,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
-            ),
+          borderRadius: BorderRadius.circular(6),
+          color: _hovered
+              ? const Color(0xffAA2E1B).withOpacity(0.08)
+              : Colors.transparent,
+        ),
+        child: Text(
+          widget.tag.toUpperCase(),
+          style: TextStyle(
+            color: _hovered ? Colors.white : Colors.grey.shade300,
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
         ),
-      )
-          .toList(),
+      ),
     );
   }
 }
@@ -334,43 +420,114 @@ class _ActionButtonsRow extends StatelessWidget {
       spacing: 12,
       runSpacing: 12,
       children: [
-        ElevatedButton.icon(
-          onPressed: onViewDetails,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFE0522D),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            elevation: 0,
-          ),
-          icon: const Icon(Icons.north_east, size: 16),
-          label: const Text(
-            "VIEW DETAILS",
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-          ),
-        ),
-        OutlinedButton.icon(
-          onPressed: onGithub,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.white,
-            side: const BorderSide(color: Colors.white24),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          icon: const Icon(Icons.public, size: 16),
-          label: const Text(
-            "GITHUB",
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-          ),
-        ),
+        _HoverElevatedBtn(label: "VIEW DETAILS", icon: Icons.north_east, onPressed: onViewDetails),
+        _HoverOutlinedBtn(label: "GITHUB", icon: Icons.public, onPressed: onGithub),
       ],
     );
   }
 }
+
+class _HoverElevatedBtn extends StatefulWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+  const _HoverElevatedBtn({required this.label, required this.icon, required this.onPressed});
+
+  @override
+  State<_HoverElevatedBtn> createState() => _HoverElevatedBtnState();
+}
+
+class _HoverElevatedBtnState extends State<_HoverElevatedBtn> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        transform: _hovered
+            ? (Matrix4.identity()..translate(0.0, -2.0))
+            : Matrix4.identity(),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE0522D),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: _hovered
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFFE0522D).withOpacity(0.4),
+                    blurRadius: 16,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 4),
+                  )
+                ]
+              : [],
+        ),
+        child: TextButton.icon(
+          onPressed: widget.onPressed,
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          icon: Icon(widget.icon, size: 16),
+          label: Text(widget.label,
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+        ),
+      ),
+    );
+  }
+}
+
+class _HoverOutlinedBtn extends StatefulWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+  const _HoverOutlinedBtn({required this.label, required this.icon, required this.onPressed});
+
+  @override
+  State<_HoverOutlinedBtn> createState() => _HoverOutlinedBtnState();
+}
+
+class _HoverOutlinedBtnState extends State<_HoverOutlinedBtn> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        transform: _hovered
+            ? (Matrix4.identity()..translate(0.0, -2.0))
+            : Matrix4.identity(),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: _hovered ? Colors.white54 : Colors.white24,
+          ),
+          color: _hovered ? Colors.white.withOpacity(0.05) : Colors.transparent,
+        ),
+        child: TextButton.icon(
+          onPressed: widget.onPressed,
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          icon: Icon(widget.icon, size: 16),
+          label: Text(widget.label,
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Mobile Project Card ─────────────────────────────────────────────────────
+
 class MobileProjectCard extends StatelessWidget {
   final ProjectData project;
 
@@ -385,7 +542,6 @@ class MobileProjectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
 
-
     if (screenWidth > desktopBreakpoint) {
       return const SizedBox.shrink();
     }
@@ -396,6 +552,7 @@ class MobileProjectCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF0A0A0A),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.07)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -430,19 +587,16 @@ class MobileProjectCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           ...project.bulletPoints.map(
-                (point) => _BulletPoint(text: point),
+            (point) => _BulletPoint(text: point),
           ),
           const SizedBox(height: 16),
 
-          // Tech tags
           _TechTagsWrap(tags: project.techTags),
           const SizedBox(height: 24),
           _MobileActionButtonsColumn(
             onViewDetails: () =>
                 launchProjectUrl(context, project.viewDetailsUrl),
             onGithub: () => launchProjectUrl(context, project.serverUrl),
-
-
           ),
         ],
       ),
@@ -511,6 +665,9 @@ class _MobileActionButtonsColumn extends StatelessWidget {
     );
   }
 }
+
+// ─── Responsive Wrapper ──────────────────────────────────────────────────────
+
 class ResponsiveProjectCard extends StatelessWidget {
   final ProjectData project;
 

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 const double kMobileBreakpoint = 600;
 
 bool isDesktopWidth(double width) => width > kMobileBreakpoint;
