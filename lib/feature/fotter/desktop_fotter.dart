@@ -13,7 +13,7 @@ class DesktopFooter extends StatelessWidget {
     this.email = 'joydav432@gmail.com',
     this.githubUrl = 'https://github.com/joydav432-web',
     this.linkedinUrl = 'https://www.linkedin.com/in/joy-deb-2a8b41407/',
-    this.resumeUrl = '',
+    this.resumeUrl = 'https://drive.google.com/file/d/1Ems9TMWkw_aXC40VDRao3nhW8AfhBI9S/view?usp=sharing',
   });
 
   final void Function(String label)? onNavTap;

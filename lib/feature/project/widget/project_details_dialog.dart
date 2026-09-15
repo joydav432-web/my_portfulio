@@ -368,10 +368,7 @@ class _ProjectDetailsDialogState extends State<ProjectDetailsDialog> {
 
   Widget _buildBenefitsList(bool isDesktop) {
     return Column(
-      children: widget.project.bulletPoints.asMap().entries.map((entry) {
-        final index = entry.key;
-        final benefit = entry.value;
-
+      children: widget.project.bulletPoints.map((benefit) {
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
